@@ -1,4 +1,4 @@
-const secretWordArray = [
+const rappers = [
   {
     rapper: "snoop",
     hint: "Similar name to Charlie Brown's pet"
@@ -13,18 +13,14 @@ const secretWordArray = [
   },
   {
     rapper: "eminem",
-    hint: "Also the name of a popular candy"
-  },
-  {
-    rapper: "nas",
-    hint: "Placeholder hint"
+    hint: "Also the name of a popular chocolate brand"
   },
   {
     rapper: "50cent",
     hint: "Half a dollar"
   },
   {
-    rapper: "kendricklamar",
+    rapper: "kendrick",
     hint: "B*tch don't kill my vibe"
   },
   {
@@ -33,6 +29,7 @@ const secretWordArray = [
   },
   { rapper: "jayz", hint: "Yonce's husband" }
 ];
+
 let secretWord;
 let audio;
 let guess = [];
@@ -40,21 +37,24 @@ let coins = 0;
 let livesLeft = 10;
 let gameStarted = false;
 let displayedMessage = document.createElement("p");
+let winAudio;
+let loseAudio = new Audio("./audio/lose-audio.mp3");
 
 function newWord() {
-  let ranNum = Math.floor(Math.random() * secretWordArray.length);
-  audio = new Audio(`./audio/${secretWordArray[ranNum].rapper}.mp3`);
+  gameStarted = true;
 
-  // will this work??
+  let ranNum = Math.floor(Math.random() * rappers.length);
+  audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
 
-  console.log(ranNum);
-
-  console.log(audio);
-
-  let hint = secretWordArray[ranNum].hint;
+  let hint = rappers[ranNum].hint;
   console.log(hint);
 
-  secretWord = secretWordArray[ranNum].rapper;
+  winAudio = new Audio(
+    `./audio/win-sounds/${Math.floor(Math.random() * 6) + 1}.mp3`
+  );
+  winAudio.play();
+
+  secretWord = rappers[ranNum].rapper;
   secretWord = secretWord.toLowerCase();
   guess = [];
   for (let i = 0; i < secretWord.length; i++) {
@@ -89,40 +89,48 @@ setInterval(function() {
 startMessage.addEventListener("click", function() {
   document.body.removeChild(startMessage);
   gameStarted = true;
+
   if (gameStarted) {
     newWord();
+    winAudio.play();
   }
 });
 
 document.addEventListener("keypress", function(e) {
-  let enteredKey = e.key.toLowerCase();
-  if (livesLeft > 0) {
-    gameStarted = true;
-    if (secretWord.includes(enteredKey) && gameStarted) {
-      for (let i = 0; i < secretWord.length; i++) {
-        console.log(secretWord);
-        if (secretWord[i] === e.key && !guess[i].includes(e.key)) {
-          guess[i] = secretWord[i];
-          let word = guess.join("");
-          coins++;
-          console.log(word);
-          displayedMessage.innerText = word;
-        } else if (secretWord[i] === e.key && guess[i].includes(e.key)) {
-          console.log("you've already guessed that");
+  if (gameStarted) {
+    let enteredKey = e.key.toLowerCase();
+    if (livesLeft > 0) {
+      gameStarted = true;
+      if (secretWord.includes(enteredKey) && gameStarted) {
+        for (let i = 0; i < secretWord.length; i++) {
+          console.log(secretWord);
+          if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
+            guess[i] = secretWord[i];
+            let word = guess.join("");
+            coins++;
+            console.log(word);
+            displayedMessage.innerText = word;
+          } else if (
+            secretWord[i] === enteredKey &&
+            guess[i].includes(enteredKey)
+          ) {
+            console.log("you've already guessed that");
+          }
+          if (secretWord === guess.join("")) {
+            gameStarted = false;
+            document.body.removeChild(displayedMessage);
+            newWord();
+          }
         }
-        if (secretWord === guess.join("")) {
-          gameStarted = false;
-          document.body.removeChild(displayedMessage);
-          newWord();
-        }
+      } else {
+        livesLeft--;
+        loseAudio.play();
+        console.log(`WRONG! Lives left ${livesLeft}`);
       }
-    } else {
-      livesLeft--;
-      console.log(`WRONG! Lives left ${livesLeft}`);
-    }
-    if (livesLeft === 0 && coins > 0) {
-      console.log("WRONG!");
-      console.log("would you like to buy back?");
+      if (livesLeft === 0 && coins > 0) {
+        console.log("WRONG!");
+        console.log("would you like to buy back?");
+      }
     }
   }
 });
