@@ -39,18 +39,22 @@ let secretWord;
 let audio;
 let hint;
 let guess = [];
-let coins = 0; // 10 coins to buy back 1 life
+let coins = 10; // 10 coins to buy back 1 life
 let livesLeft = 10;
 let correctGuesses = 0;
 let gameStarted = false;
 let livesString;
 
+// startscreen and display stuff
 let container;
-let startButton;
 let gameTitle;
-let displayedGuess;
-let displayedLives;
+let startButton;
 let instructionsButton;
+let authorMessage;
+let displayedLives;
+let displayedCoins;
+let displayedGuess;
+let audioHintButton;
 
 const winAudio = new Audio("./audio/win-audio.mp3");
 const loseAudio = new Audio("./audio/lose-audio.mp3");
@@ -73,77 +77,22 @@ function startScreen() {
   instructionsButton.innerText = "Instructions";
   container.appendChild(instructionsButton);
 
+  authorMessage = document.createElement("p");
+  authorMessage.classList.add("author-message")
+  authorMessage.innerText = "Made with ❤ by Ben Jacob Lee";
+  container.appendChild(authorMessage);
+
   startButton.addEventListener("click", startGame);
   instructionsButton.addEventListener("click", displayInstructions);
 }
 
 startScreen();
 
-function newWord() {
-  gameStarted = true;
-  winAudio.play();
-
-  let ranNum = Math.floor(Math.random() * rappers.length);
-  audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
-
-  hint = document.createElement("p");
-  hint.innerText = rappers[ranNum].hint;
-
-  secretWord = rappers[ranNum].rapper;
-  secretWord = secretWord.toLowerCase();
-  guess = [];
-  for (let i = 0; i < secretWord.length; i++) {
-    guess[i] = "_";
-  }
-  displayedGuess.innerText = guess.join("");
-  displayedGuess.style.fontSize = "7rem";
-
-  makeLivesString();
-
-  setTimeout(function() {
-    container.appendChild(displayedLives);
-    container.appendChild(displayedGuess);
-    container.appendChild(hint);
-    audio.play();
-  }, 2000);
-}
-
-function displayCorrectGuessMessage() {
-  const correctGuessMessage = document.createElement("p");
-  correctGuessMessage.style.fontSize = "10rem";
-  correctGuessMessage.innerText = "YEAH";
-  container.appendChild(correctGuessMessage);
-  setTimeout(function() {
-    container.removeChild(correctGuessMessage);
-  }, 1000);
-}
-
-function displayWrongGuessMessage() {
-  const wrongGuessMessage = document.createElement("p");
-  wrongGuessMessage.style.fontSize = "10rem";
-  wrongGuessMessage.innerText = `WRONG
-                                Lives left: ${livesLeft}
-                                `;
-
-  container.appendChild(wrongGuessMessage);
-  container.removeChild(displayedGuess);
-  container.removeChild(hint);
-  container.removeChild(displayedLives);
-
-  if (livesLeft !== 0) {
-    setTimeout(function() {
-      container.appendChild(displayedLives);
-      container.removeChild(wrongGuessMessage);
-      container.appendChild(displayedGuess);
-      container.appendChild(hint);
-    }, 1000);
-  }
-}
-
 function startGame() {
   container.removeChild(gameTitle);
   container.removeChild(startButton);
   container.removeChild(instructionsButton);
+  container.removeChild(authorMessage);
   gameStarted = true;
 
   if (gameStarted) {
@@ -171,6 +120,90 @@ function displayInstructions() {
     document.body.innerHTML = "";
     startScreen();
   });
+}
+
+function newWord() {
+  gameStarted = true;
+  winAudio.play();
+
+  let ranNum = Math.floor(Math.random() * rappers.length);
+  audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
+
+  hint = document.createElement("p");
+  hint.innerText = rappers[ranNum].hint;
+
+  secretWord = rappers[ranNum].rapper;
+  secretWord = secretWord.toLowerCase();
+  guess = [];
+  for (let i = 0; i < secretWord.length; i++) {
+    guess[i] = "_";
+  }
+  displayedGuess.innerText = guess.join("");
+  displayedGuess.style.fontSize = "7rem";
+
+  makeLivesString();
+
+  displayedCoins = document.createElement("p");
+  displayedCoins.classList.add("displayed-coins");
+  displayedCoins.innerText = `Coins: ${coins}`;
+
+  audioHintButton = document.createElement("button");
+  audioHintButton.classList.add("audio-hint-button");
+  audioHintButton.innerText = "Get audio hint";
+
+  audioHintButton.addEventListener("click", function() {
+    audio.play();
+    coins -= 5;
+    displayedCoins.innerText = `Coins: ${coins}`;
+    container.innerHTML = "";
+    refreshDisplayValues();
+  });
+
+  setTimeout(refreshDisplayValues, 2000);
+}
+
+function refreshDisplayValues() {
+  container.appendChild(displayedLives);
+  container.appendChild(displayedCoins);
+  container.appendChild(displayedGuess);
+  container.appendChild(hint);
+  container.appendChild(audioHintButton);
+}
+
+function displayCorrectGuessMessage() {
+  const correctGuessMessage = document.createElement("p");
+  correctGuessMessage.style.fontSize = "10rem";
+  correctGuessMessage.innerText = "YEAH";
+  container.appendChild(correctGuessMessage);
+  setTimeout(function() {
+    container.removeChild(correctGuessMessage);
+  }, 1000);
+}
+
+function displayWrongGuessMessage() {
+  const wrongGuessMessage = document.createElement("p");
+  wrongGuessMessage.style.fontSize = "10rem";
+  wrongGuessMessage.innerText = `WRONG
+                                Lives left: ${livesLeft}
+                                `;
+
+  container.appendChild(wrongGuessMessage);
+  container.removeChild(displayedLives);
+  container.removeChild(displayedCoins);
+  container.removeChild(displayedGuess);
+  container.removeChild(hint);
+  container.removeChild(audioHintButton);
+
+  if (livesLeft !== 0) {
+    setTimeout(function() {
+      container.appendChild(displayedLives);
+      container.appendChild(displayedCoins);
+      container.removeChild(wrongGuessMessage);
+      container.appendChild(displayedGuess);
+      container.appendChild(hint);
+      container.appendChild(audioHintButton);
+    }, 1000);
+  }
 }
 
 function makeLivesString() {
@@ -202,7 +235,6 @@ document.addEventListener("keypress", function(e) {
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
             guess[i] = secretWord[i];
             let word = guess.join("");
-            coins++;
             console.log(word);
             displayedGuess.innerText = word;
           } else if (
@@ -214,10 +246,13 @@ document.addEventListener("keypress", function(e) {
           if (secretWord === guess.join("")) {
             gameStarted = false;
             correctGuesses++;
+            coins += 5;
             console.log(correctGuesses);
             container.removeChild(displayedLives);
+            container.removeChild(displayedCoins);
             container.removeChild(displayedGuess);
             container.removeChild(hint);
+            container.removeChild(audioHintButton);
             displayCorrectGuessMessage();
             newWord();
           }
@@ -247,8 +282,7 @@ document.addEventListener("keypress", function(e) {
       container.innerText = "";
       const loseMessage = document.createElement("p");
       loseMessage.innerText = `You lose! 
-      Correct guesses: ${correctGuesses}
-      Retry?`;
+      Correct guesses: ${correctGuesses}`;
       container.appendChild(loseMessage);
       const retryButton = document.createElement("button");
       retryButton.classList.add("retry-button");
@@ -258,6 +292,7 @@ document.addEventListener("keypress", function(e) {
         document.body.innerHTML = "";
         coins = 0;
         livesLeft = 10;
+        winAudio.play();
         startScreen();
       });
     }
