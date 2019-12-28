@@ -1,4 +1,4 @@
-const rappers = [
+let rappers = [
   {
     rapper: "snoop",
     hint: "Formerly known as _____ Lion"
@@ -39,7 +39,7 @@ const rappers = [
   },
   {
     rapper: "chingy",
-    hint: "I like the way you do it right _____"
+    hint: "I like the way you do it right thurr"
   },
   {
     rapper: "bowwow",
@@ -47,6 +47,58 @@ const rappers = [
   }
 ];
 
+function populateRappersArray() {
+  rappers = [
+    {
+      rapper: "snoop",
+      hint: "Formerly known as _____ Lion"
+    },
+    {
+      rapper: "biggie",
+      hint: "Opposite of small"
+    },
+    {
+      rapper: "tupac",
+      hint: "More than one pack"
+    },
+    {
+      rapper: "eminem",
+      hint: "Also the name of a popular chocolate brand"
+    },
+    {
+      rapper: "50cent",
+      hint: "Half a dollar"
+    },
+    {
+      rapper: "kendrick",
+      hint: "Don't kill my vibe"
+    },
+    {
+      rapper: "outkast",
+      hint: "Pariahs"
+    },
+    { rapper: "jayz", hint: "Yonce's husband" },
+    { rapper: "icecube", hint: "Something you might put in soda" },
+    { rapper: "dre", hint: "Not a real doctor" },
+    { rapper: "drake", hint: "Short form for dragon" },
+    { rapper: "DMX", hint: "Deadpool soundtrack" },
+    { rapper: "kanye", hint: "YEEZUS" },
+    {
+      rapper: "chamillionaire",
+      hint: "Only really famous for that one song"
+    },
+    {
+      rapper: "chingy",
+      hint: "I like the way you do it right thurr"
+    },
+    {
+      rapper: "bowwow",
+      hint: "Dog sounds"
+    }
+  ];
+}
+
+let ranNum;
 let secretWord;
 let audio;
 let hint;
@@ -123,7 +175,7 @@ function displayInstructions() {
     You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)! 
     Spend 5 coins to get an audio hint!
     Enter your choice by simply typing on the keyboard. 
-    Have fun and keep it real 👐`;
+    Have fun and keep it a hunnit 👐`;
   container.appendChild(instructionsPara);
   const backButton = document.createElement("button");
   backButton.classList.add("back-button");
@@ -140,7 +192,7 @@ function newWord() {
   gameStarted = true;
   winAudio.play();
 
-  let ranNum = Math.floor(Math.random() * rappers.length);
+  ranNum = Math.floor(Math.random() * rappers.length);
   audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
 
   hint = document.createElement("p");
@@ -174,7 +226,9 @@ function newWord() {
     audioHintButton.classList.add("hint-button-fade-out");
   });
 
-  setTimeout(refreshDisplayValues, 2000);
+  setTimeout(refreshDisplayValues, 200);
+
+  console.log(rappers);
 }
 
 function refreshDisplayValues() {
@@ -192,7 +246,7 @@ function displayCorrectGuessMessage() {
   container.appendChild(correctGuessMessage);
   setTimeout(function() {
     container.removeChild(correctGuessMessage);
-  }, 1000);
+  }, 200);
 }
 
 function displayWrongGuessMessage() {
@@ -203,21 +257,27 @@ function displayWrongGuessMessage() {
                                 `;
 
   container.appendChild(wrongGuessMessage);
-  container.removeChild(displayedLives);
-  container.removeChild(displayedCoins);
-  container.removeChild(displayedGuess);
-  container.removeChild(hint);
-  container.removeChild(audioHintButton);
+
+  if (displayedLives.parentNode === container) {
+    container.removeChild(displayedLives);
+    container.removeChild(displayedCoins);
+    container.removeChild(displayedGuess);
+    container.removeChild(hint);
+    container.removeChild(audioHintButton);
+  }
 
   if (livesLeft !== 0) {
-    setTimeout(function() {
-      container.appendChild(displayedLives);
-      container.appendChild(displayedCoins);
-      container.removeChild(wrongGuessMessage);
-      container.appendChild(displayedGuess);
-      container.appendChild(hint);
-      container.appendChild(audioHintButton);
-    }, 1000);
+    if (wrongGuessMessage.parentNode === container) {
+      setTimeout(function() {
+ container.appendChild(displayedLives);
+ container.appendChild(displayedCoins);
+ container.removeChild(wrongGuessMessage);
+ container.appendChild(displayedGuess);
+ container.appendChild(hint);
+ container.appendChild(audioHintButton);
+      }, 500)
+     
+    }
   }
 }
 
@@ -236,6 +296,8 @@ function buyBack() {
   coins -= 10;
   livesLeft++;
   container.innerHTML = "";
+
+  populateRappersArray();
   newWord();
 }
 
@@ -259,6 +321,7 @@ document.addEventListener("keypress", function(e) {
             console.log("you've already guessed that");
           }
           if (secretWord === guess.join("")) {
+            rappers.splice(ranNum, 1);
             gameStarted = false;
             correctGuesses++;
             coins += 5;
@@ -294,11 +357,14 @@ document.addEventListener("keypress", function(e) {
       buyBackButton.addEventListener("click", buyBack);
     }
     if (livesLeft === 0 && coins < 10) {
+      gameStarted = false;
+
       container.innerText = "";
       const loseMessage = document.createElement("p");
       loseMessage.innerText = `You lose! 
       Correct guesses: ${correctGuesses}`;
       container.appendChild(loseMessage);
+
       const retryButton = document.createElement("button");
       retryButton.classList.add("retry-button");
       retryButton.innerText = "Retry?";
