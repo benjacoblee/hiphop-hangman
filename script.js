@@ -1,7 +1,7 @@
 const rappers = [
   {
     rapper: "snoop",
-    hint: "Similar name to Charlie Brown's pet"
+    hint: "Formerly known as _____ Lion"
   },
   {
     rapper: "biggie",
@@ -24,15 +24,27 @@ const rappers = [
     hint: "Don't kill my vibe"
   },
   {
-    rapper: "andre3000",
-    hint: "From Outkast"
+    rapper: "outkast",
+    hint: "Pariahs"
   },
   { rapper: "jayz", hint: "Yonce's husband" },
   { rapper: "icecube", hint: "Something you might put in soda" },
   { rapper: "dre", hint: "Not a real doctor" },
-  { rapper: "drake", hint: "Used to call me on my" },
-  { rapper: "DMX", hint: "Famous for that song in Deadpool" },
-  { rapper: "Kanye", hint: "YEEZUS" }
+  { rapper: "drake", hint: "Short form for dragon" },
+  { rapper: "DMX", hint: "Deadpool soundtrack" },
+  { rapper: "kanye", hint: "YEEZUS" },
+  {
+    rapper: "chamillionaire",
+    hint: "Only really famous for that one song"
+  },
+  {
+    rapper: "chingy",
+    hint: "I like the way you do it right _____"
+  },
+  {
+    rapper: "bowwow",
+    hint: "Dog sounds"
+  }
 ];
 
 let secretWord;
@@ -55,6 +67,7 @@ let displayedLives;
 let displayedCoins;
 let displayedGuess;
 let audioHintButton;
+let display = true;
 
 const winAudio = new Audio("./audio/win-audio.mp3");
 const loseAudio = new Audio("./audio/lose-audio.mp3");
@@ -107,7 +120,8 @@ function displayInstructions() {
   const instructionsPara = document.createElement("p");
   instructionsPara.innerText = `Welcome to Hip-Hop Hangman! 
     Listen to the sound clues provided and guess the rapper! 
-    You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coin)! 
+    You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)! 
+    Spend 5 coins to get an audio hint!
     Enter your choice by simply typing on the keyboard. 
     Have fun and keep it real 👐`;
   container.appendChild(instructionsPara);
@@ -157,6 +171,7 @@ function newWord() {
     displayedCoins.innerText = `Coins: ${coins}`;
     container.innerHTML = "";
     refreshDisplayValues();
+    audioHintButton.classList.add("hint-button-fade-out");
   });
 
   setTimeout(refreshDisplayValues, 2000);

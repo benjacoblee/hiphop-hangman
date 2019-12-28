@@ -58,3 +58,38 @@ p {
   margin-right: auto;
   font-size: 1.5rem;
 }
+
+h1,
+.start-button,
+.instructions-button,
+.author-message {
+  -webkit-animation: fadein 2s;
+  -moz-animation: fadein 2s;
+  -ms-animation: fadein 2s;
+  -o-animation: fadein 2s;
+  animation: fadein 2s;
+}
+
+.hint-button-fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 2s, opacity 0.5s linear;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
