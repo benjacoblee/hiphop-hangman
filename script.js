@@ -30,7 +30,7 @@ let rappers = [
   { rapper: "jayz", hint: "Yonce's husband" },
   { rapper: "icecube", hint: "Something you might put in soda" },
   { rapper: "dre", hint: "Not a real doctor" },
-  { rapper: "drake", hint: "Short form for dragon" },
+  { rapper: "drake", hint: "Short form for dragon" }, // TO CHANGE DRAKE SONG
   { rapper: "DMX", hint: "Deadpool soundtrack" },
   { rapper: "kanye", hint: "YEEZUS" },
   {
@@ -119,10 +119,12 @@ let displayedLives;
 let displayedCoins;
 let displayedGuess;
 let audioHintButton;
+let retryButton;
 let display = true;
 
 const winAudio = new Audio("./audio/win-audio.mp3");
 const loseAudio = new Audio("./audio/lose-audio.mp3");
+let endAudio;
 
 function startScreen() {
   container = document.createElement("div");
@@ -246,7 +248,9 @@ function displayCorrectGuessMessage() {
   correctGuessMessage.innerText = "YEAH";
   container.appendChild(correctGuessMessage);
   setTimeout(function() {
-    container.removeChild(correctGuessMessage);
+    if (correctGuessMessage.parentNode === container) {
+      container.removeChild(correctGuessMessage);
+    }
   }, 200);
 }
 
@@ -297,8 +301,21 @@ function buyBack() {
   livesLeft++;
   container.innerHTML = "";
 
-  populateRappersArray();
   newWord();
+}
+
+function createRetryButton() {
+  retryButton = document.createElement("button");
+  retryButton.classList.add("retry-button");
+  retryButton.innerText = "Retry?";
+  container.appendChild(retryButton);
+  retryButton.addEventListener("click", function() {
+    document.body.innerHTML = "";
+    coins = 0;
+    livesLeft = 10;
+    winAudio.play();
+    startScreen();
+  });
 }
 
 document.addEventListener("keypress", function(e) {
@@ -327,16 +344,18 @@ document.addEventListener("keypress", function(e) {
             correctGuesses++;
             coins += 5;
             console.log(correctGuesses);
-            container.removeChild(displayedLives);
-            container.removeChild(displayedCoins);
-            container.removeChild(displayedGuess);
-            container.removeChild(hint);
-            container.removeChild(audioHintButton);
-            displayCorrectGuessMessage();
-            newWord();
-          }
-          if (correctGuesses === rappers.length) {
-            console.log("OMG U WIN"); // implement win condition
+            if (displayedLives.parentNode === container) {
+              container.removeChild(displayedLives);
+              container.removeChild(displayedCoins);
+              container.removeChild(displayedGuess);
+              container.removeChild(hint);
+              container.removeChild(audioHintButton);
+              displayCorrectGuessMessage();
+            }
+
+            if (rappers.length > 0) {
+              newWord();
+            }
           }
         }
       } else {
@@ -345,6 +364,21 @@ document.addEventListener("keypress", function(e) {
         displayWrongGuessMessage();
         makeLivesString();
       }
+    }
+    if (rappers.length === 0) {
+      container.innerHTML = "";
+
+      endAudio = new Audio("./audio/end-audio.mp3");
+      endAudio.play();
+
+      const winMessage = document.createElement("p");
+      winMessage.innerText = "You won!";
+      populateRappersArray();
+      container.appendChild(winMessage);
+      createRetryButton();
+      retryButton.addEventListener("click", function() {
+        endAudio.pause();
+      });
     }
     if (livesLeft === 0 && coins >= 10) {
       container.innerText = "";
@@ -366,17 +400,10 @@ document.addEventListener("keypress", function(e) {
       Correct guesses: ${correctGuesses}`;
       container.appendChild(loseMessage);
 
-      const retryButton = document.createElement("button");
-      retryButton.classList.add("retry-button");
-      retryButton.innerText = "Retry?";
-      container.appendChild(retryButton);
-      retryButton.addEventListener("click", function() {
-        document.body.innerHTML = "";
-        coins = 0;
-        livesLeft = 10;
-        winAudio.play();
-        startScreen();
-      });
+      if (rappers.length === 0) {
+        populateRappersArray();
+      }
+      createRetryButton();
     }
   }
 });
