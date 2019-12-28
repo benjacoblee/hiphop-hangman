@@ -231,7 +231,6 @@ function newWord() {
 
   setTimeout(refreshDisplayValues, 200);
 
-  console.log(rappers);
 }
 
 function refreshDisplayValues() {
@@ -314,6 +313,7 @@ function createRetryButton() {
     coins = 0;
     livesLeft = 10;
     winAudio.play();
+    populateRappersArray();
     startScreen();
   });
 }
@@ -325,11 +325,11 @@ document.addEventListener("keypress", function(e) {
       gameStarted = true;
       if (secretWord.includes(enteredKey) && gameStarted) {
         for (let i = 0; i < secretWord.length; i++) {
-          console.log(secretWord);
+          
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
             guess[i] = secretWord[i];
             let word = guess.join("");
-            console.log(word);
+            
             displayedGuess.innerText = word;
           } else if (
             secretWord[i] === enteredKey &&
@@ -343,7 +343,7 @@ document.addEventListener("keypress", function(e) {
             gameStarted = false;
             correctGuesses++;
             coins += 5;
-            console.log(correctGuesses);
+          
             if (displayedLives.parentNode === container) {
               container.removeChild(displayedLives);
               container.removeChild(displayedCoins);
