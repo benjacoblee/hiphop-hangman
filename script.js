@@ -78,7 +78,8 @@ function newWord() {
   let ranNum = Math.floor(Math.random() * rappers.length);
   audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
 
-  hint = rappers[ranNum].hint;
+  hint = document.createElement("p");
+  hint.innerText = rappers[ranNum].hint;
   console.log(hint);
 
   secretWord = rappers[ranNum].rapper;
@@ -88,15 +89,18 @@ function newWord() {
     guess[i] = "_";
   }
   displayedGuess.innerText = guess.join("");
+  displayedGuess.style.fontSize = "7rem";
 
   setTimeout(function() {
     container.appendChild(displayedGuess);
+    container.appendChild(hint);
     audio.play();
   }, 2000);
 }
 
 function displayCorrectGuessMessage() {
   const correctGuessMessage = document.createElement("p");
+  correctGuessMessage.style.fontSize = "10rem";
   correctGuessMessage.innerText = "YEYAH";
   container.appendChild(correctGuessMessage);
   setTimeout(function() {
@@ -106,6 +110,7 @@ function displayCorrectGuessMessage() {
 
 function displayWrongGuessMessage() {
   const wrongGuessMessage = document.createElement("p");
+  wrongGuessMessage.style.fontSize = "10rem";
   wrongGuessMessage.innerText = `WRONG
                                 Lives left: ${livesLeft}
                                 Hint: ${hint}`;
@@ -174,6 +179,7 @@ document.addEventListener("keypress", function(e) {
           if (secretWord === guess.join("")) {
             gameStarted = false;
             container.removeChild(displayedGuess);
+            container.removeChild(hint);
             displayCorrectGuessMessage();
             newWord();
           }
