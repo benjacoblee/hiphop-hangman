@@ -230,7 +230,6 @@ function newWord() {
   });
 
   setTimeout(refreshDisplayValues, 200);
-
 }
 
 function refreshDisplayValues() {
@@ -271,16 +270,16 @@ function displayWrongGuessMessage() {
   }
 
   if (livesLeft !== 0) {
-    if (wrongGuessMessage.parentNode === container) {
-      setTimeout(function() {
+    setTimeout(function() {
+      if (wrongGuessMessage.parentNode === container) {
         container.appendChild(displayedLives);
         container.appendChild(displayedCoins);
         container.removeChild(wrongGuessMessage);
         container.appendChild(displayedGuess);
         container.appendChild(hint);
         container.appendChild(audioHintButton);
-      }, 500);
-    }
+      }
+    }, 500);
   }
 }
 
@@ -325,11 +324,10 @@ document.addEventListener("keypress", function(e) {
       gameStarted = true;
       if (secretWord.includes(enteredKey) && gameStarted) {
         for (let i = 0; i < secretWord.length; i++) {
-          
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
             guess[i] = secretWord[i];
             let word = guess.join("");
-            
+
             displayedGuess.innerText = word;
           } else if (
             secretWord[i] === enteredKey &&
@@ -343,7 +341,7 @@ document.addEventListener("keypress", function(e) {
             gameStarted = false;
             correctGuesses++;
             coins += 5;
-          
+
             if (displayedLives.parentNode === container) {
               container.removeChild(displayedLives);
               container.removeChild(displayedCoins);
