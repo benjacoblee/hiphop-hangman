@@ -194,6 +194,7 @@ function newWord() {
 
   ranNum = Math.floor(Math.random() * rappers.length);
   audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
+  audio.currentTime = 0;
 
   hint = document.createElement("p");
   hint.innerText = rappers[ranNum].hint;
@@ -269,14 +270,13 @@ function displayWrongGuessMessage() {
   if (livesLeft !== 0) {
     if (wrongGuessMessage.parentNode === container) {
       setTimeout(function() {
- container.appendChild(displayedLives);
- container.appendChild(displayedCoins);
- container.removeChild(wrongGuessMessage);
- container.appendChild(displayedGuess);
- container.appendChild(hint);
- container.appendChild(audioHintButton);
-      }, 500)
-     
+        container.appendChild(displayedLives);
+        container.appendChild(displayedCoins);
+        container.removeChild(wrongGuessMessage);
+        container.appendChild(displayedGuess);
+        container.appendChild(hint);
+        container.appendChild(audioHintButton);
+      }, 500);
     }
   }
 }
@@ -321,6 +321,7 @@ document.addEventListener("keypress", function(e) {
             console.log("you've already guessed that");
           }
           if (secretWord === guess.join("")) {
+            audio.pause();
             rappers.splice(ranNum, 1);
             gameStarted = false;
             correctGuesses++;
