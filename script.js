@@ -21,13 +21,18 @@ const rappers = [
   },
   {
     rapper: "kendrick",
-    hint: "B*tch don't kill my vibe"
+    hint: "Don't kill my vibe"
   },
   {
     rapper: "andre3000",
     hint: "From Outkast"
   },
-  { rapper: "jayz", hint: "Yonce's husband" }
+  { rapper: "jayz", hint: "Yonce's husband" },
+  { rapper: "icecube", hint: "Something you might put in soda" },
+  { rapper: "dre", hint: "Not a real doctor" },
+  { rapper: "drake", hint: "Used to call me on my" },
+  { rapper: "DMX", hint: "Really famous for that Deadpool song" },
+  { rapper: "Kanye", hint: "YEEZY" }
 ];
 
 let secretWord;
@@ -36,13 +41,20 @@ let hint;
 let guess = [];
 let coins = 0; // 10 coins to buy back 1 life
 let livesLeft = 10;
+let correctGuesses = 0;
 let gameStarted = false;
+let livesString;
 
 let container;
 let startButton;
 let gameTitle;
 let displayedGuess;
+let displayedLives;
 let instructionsButton;
+
+const winAudio = new Audio("./audio/win-audio.mp3");
+const loseAudio = new Audio("./audio/lose-audio.mp3");
+
 function startScreen() {
   container = document.createElement("div");
   container.classList.add("container");
@@ -64,12 +76,8 @@ function startScreen() {
   startButton.addEventListener("click", startGame);
   instructionsButton.addEventListener("click", displayInstructions);
 }
+
 startScreen();
-
-let display = true;
-
-const winAudio = new Audio("./audio/win-audio.mp3");
-const loseAudio = new Audio("./audio/lose-audio.mp3");
 
 function newWord() {
   gameStarted = true;
@@ -80,7 +88,6 @@ function newWord() {
 
   hint = document.createElement("p");
   hint.innerText = rappers[ranNum].hint;
-  console.log(hint);
 
   secretWord = rappers[ranNum].rapper;
   secretWord = secretWord.toLowerCase();
@@ -91,7 +98,10 @@ function newWord() {
   displayedGuess.innerText = guess.join("");
   displayedGuess.style.fontSize = "7rem";
 
+  makeLivesString();
+
   setTimeout(function() {
+    container.appendChild(displayedLives);
     container.appendChild(displayedGuess);
     container.appendChild(hint);
     audio.play();
@@ -101,7 +111,7 @@ function newWord() {
 function displayCorrectGuessMessage() {
   const correctGuessMessage = document.createElement("p");
   correctGuessMessage.style.fontSize = "10rem";
-  correctGuessMessage.innerText = "YEYAH";
+  correctGuessMessage.innerText = "YEAH";
   container.appendChild(correctGuessMessage);
   setTimeout(function() {
     container.removeChild(correctGuessMessage);
@@ -113,17 +123,24 @@ function displayWrongGuessMessage() {
   wrongGuessMessage.style.fontSize = "10rem";
   wrongGuessMessage.innerText = `WRONG
                                 Lives left: ${livesLeft}
-                                Hint: ${hint}`;
+                                `;
 
-  container.removeChild(displayedGuess);
   container.appendChild(wrongGuessMessage);
-  setTimeout(function() {
-    container.removeChild(wrongGuessMessage);
-    container.appendChild(displayedGuess);
-  }, 1000);
+  container.removeChild(displayedGuess);
+  container.removeChild(hint);
+  container.removeChild(displayedLives);
+
+  if (livesLeft !== 0) {
+    setTimeout(function() {
+      container.appendChild(displayedLives);
+      container.removeChild(wrongGuessMessage);
+      container.appendChild(displayedGuess);
+      container.appendChild(hint);
+    }, 1000);
+  }
 }
 
-function startGame(e) {
+function startGame() {
   container.removeChild(gameTitle);
   container.removeChild(startButton);
   container.removeChild(instructionsButton);
@@ -156,6 +173,24 @@ function displayInstructions() {
   });
 }
 
+function makeLivesString() {
+  livesString = "Lives left: ";
+  for (let i = 0; i < livesLeft; i++) {
+    livesString += "♥";
+  }
+  displayedLives = document.createElement("p");
+  displayedLives.classList.add("displayed-lives");
+  displayedLives.innerText = livesString;
+  return displayedLives;
+}
+
+function buyBack() {
+  coins -= 10;
+  livesLeft++;
+  container.innerHTML = "";
+  newWord();
+}
+
 document.addEventListener("keypress", function(e) {
   if (gameStarted) {
     let enteredKey = e.key.toLowerCase();
@@ -178,22 +213,53 @@ document.addEventListener("keypress", function(e) {
           }
           if (secretWord === guess.join("")) {
             gameStarted = false;
+            correctGuesses++;
+            console.log(correctGuesses);
+            container.removeChild(displayedLives);
             container.removeChild(displayedGuess);
             container.removeChild(hint);
             displayCorrectGuessMessage();
             newWord();
+          }
+          if (correctGuesses === rappers.length) {
+            console.log("OMG U WIN"); // implement win condition
           }
         }
       } else {
         livesLeft--;
         loseAudio.play();
         displayWrongGuessMessage();
-        console.log(`WRONG! Lives left ${livesLeft}`);
+        makeLivesString();
       }
-      if (livesLeft === 0 && coins > 0) {
-        console.log("WRONG!");
-        console.log("would you like to buy back?");
-      }
+    }
+    if (livesLeft === 0 && coins >= 10) {
+      container.innerText = "";
+      const buyBackMessage = document.createElement("p");
+      buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
+      container.appendChild(buyBackMessage);
+      const buyBackButton = document.createElement("button");
+      buyBackButton.classList.add("buy-back-button");
+      buyBackButton.innerText = "Buy back";
+      container.appendChild(buyBackButton);
+      buyBackButton.addEventListener("click", buyBack);
+    }
+    if (livesLeft === 0 && coins < 10) {
+      container.innerText = "";
+      const loseMessage = document.createElement("p");
+      loseMessage.innerText = `You lose! 
+      Correct guesses: ${correctGuesses}
+      Retry?`;
+      container.appendChild(loseMessage);
+      const retryButton = document.createElement("button");
+      retryButton.classList.add("retry-button");
+      retryButton.innerText = "Retry?";
+      container.appendChild(retryButton);
+      retryButton.addEventListener("click", function() {
+        document.body.innerHTML = "";
+        coins = 0;
+        livesLeft = 10;
+        startScreen();
+      });
     }
   }
 });
