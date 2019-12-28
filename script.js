@@ -31,8 +31,8 @@ const rappers = [
   { rapper: "icecube", hint: "Something you might put in soda" },
   { rapper: "dre", hint: "Not a real doctor" },
   { rapper: "drake", hint: "Used to call me on my" },
-  { rapper: "DMX", hint: "Really famous for that Deadpool song" },
-  { rapper: "Kanye", hint: "YEEZY" }
+  { rapper: "DMX", hint: "Famous for that song in Deadpool" },
+  { rapper: "Kanye", hint: "YEEZUS" }
 ];
 
 let secretWord;
@@ -50,7 +50,7 @@ let container;
 let gameTitle;
 let startButton;
 let instructionsButton;
-let authorMessage;
+let creatorMessage;
 let displayedLives;
 let displayedCoins;
 let displayedGuess;
@@ -77,10 +77,10 @@ function startScreen() {
   instructionsButton.innerText = "Instructions";
   container.appendChild(instructionsButton);
 
-  authorMessage = document.createElement("p");
-  authorMessage.classList.add("author-message")
-  authorMessage.innerText = "Made with ❤ by Ben Jacob Lee";
-  container.appendChild(authorMessage);
+  creatorMessage = document.createElement("p");
+  creatorMessage.classList.add("author-message");
+  creatorMessage.innerText = "Made with ❤ by Ben Jacob Lee";
+  container.appendChild(creatorMessage);
 
   startButton.addEventListener("click", startGame);
   instructionsButton.addEventListener("click", displayInstructions);
@@ -92,7 +92,7 @@ function startGame() {
   container.removeChild(gameTitle);
   container.removeChild(startButton);
   container.removeChild(instructionsButton);
-  container.removeChild(authorMessage);
+  container.removeChild(creatorMessage);
   gameStarted = true;
 
   if (gameStarted) {

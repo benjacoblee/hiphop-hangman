@@ -1,0 +1,60 @@
+body,
+html {
+  height: 100%;
+}
+body {
+  font-family: "Permanent Marker", cursive;
+  background-color: #282828;
+  color: white;
+}
+
+h1 {
+  display: block;
+  text-align: center;
+  font-size: 10rem;
+}
+
+p {
+  text-align: center;
+  font-size: 3rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.start-button,
+.instructions-button,
+.back-button,
+.buy-back-button,
+.retry-button {
+  margin: 5px;
+  width: 70%;
+  color: black;
+  border-radius: 5px;
+}
+
+.author-message {
+  font-size: 1rem;
+  margin-top: 100px;
+}
+
+.audio-hint-button {
+  color: black;
+  border-radius: 5px;
+}
+
+.displayed-lives {
+  margin-right: auto;
+  font-size: 1.5rem;
+}
+
+.displayed-coins {
+  margin-right: auto;
+  font-size: 1.5rem;
+}
