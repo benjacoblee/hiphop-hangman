@@ -38,14 +38,38 @@ let coins = 0; // 10 coins to buy back 1 life
 let livesLeft = 10;
 let gameStarted = false;
 
-let container = document.createElement("div");
-container.classList.add("container");
-document.body.appendChild(container);
-let displayedGuess = document.createElement("p");
-displayedGuess.classList.add("displayedGuess");
+let container;
+let startButton;
+let gameTitle;
+let displayedGuess;
+let instructionsButton;
+function startScreen() {
+  container = document.createElement("div");
+  container.classList.add("container");
+  document.body.appendChild(container);
+  displayedGuess = document.createElement("p");
+  displayedGuess.classList.add("displayedGuess");
+  gameTitle = document.createElement("h1");
+  gameTitle.innerText = "Hip-Hop Hangman";
+  container.appendChild(gameTitle);
+  startButton = document.createElement("button");
+  startButton.classList.add("start-button");
+  startButton.innerText = "Start";
+  container.appendChild(startButton);
+  instructionsButton = document.createElement("button");
+  instructionsButton.classList.add("instructions-button");
+  instructionsButton.innerText = "Instructions";
+  container.appendChild(instructionsButton);
 
-let winAudio = new Audio("./audio/win-audio.mp3");
-let loseAudio = new Audio("./audio/lose-audio.mp3");
+  startButton.addEventListener("click", startGame);
+  instructionsButton.addEventListener("click", displayInstructions);
+}
+startScreen();
+
+let display = true;
+
+const winAudio = new Audio("./audio/win-audio.mp3");
+const loseAudio = new Audio("./audio/lose-audio.mp3");
 
 function newWord() {
   gameStarted = true;
@@ -74,7 +98,6 @@ function newWord() {
 function displayCorrectGuessMessage() {
   const correctGuessMessage = document.createElement("p");
   correctGuessMessage.innerText = "YEYAH";
-  correctGuessMessage.style.fontSize = "10rem";
   container.appendChild(correctGuessMessage);
   setTimeout(function() {
     container.removeChild(correctGuessMessage);
@@ -86,7 +109,7 @@ function displayWrongGuessMessage() {
   wrongGuessMessage.innerText = `WRONG
                                 Lives left: ${livesLeft}
                                 Hint: ${hint}`;
-  wrongGuessMessage.style.fontSize = "10rem";
+
   container.removeChild(displayedGuess);
   container.appendChild(wrongGuessMessage);
   setTimeout(function() {
@@ -95,33 +118,38 @@ function displayWrongGuessMessage() {
   }, 1000);
 }
 
-// Create start message
-let startMessage = document.createElement("h1");
-startMessage.innerText = "Click to start";
-container.appendChild(startMessage);
-let display = true;
-
-// Blinking effect
-setInterval(function() {
-  if (display) {
-    startMessage.style.display = "none";
-    display = false;
-  } else if (!display) {
-    startMessage.style.display = "block";
-    display = true;
-  }
-}, 1000);
-
-// Removes start message upon click
-startMessage.addEventListener("click", function() {
-  container.removeChild(startMessage);
+function startGame(e) {
+  container.removeChild(gameTitle);
+  container.removeChild(startButton);
+  container.removeChild(instructionsButton);
   gameStarted = true;
 
   if (gameStarted) {
+    displayCorrectGuessMessage();
     newWord();
     winAudio.play();
   }
-});
+}
+
+function displayInstructions() {
+  container.innerHTML = "";
+  const instructionsPara = document.createElement("p");
+  instructionsPara.innerText = `Welcome to Hip-Hop Hangman! 
+    Listen to the sound clues provided and guess the rapper! 
+    You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coin)! 
+    Enter your choice by simply typing on the keyboard. 
+    Have fun and keep it real 👐`;
+  container.appendChild(instructionsPara);
+  const backButton = document.createElement("button");
+  backButton.classList.add("back-button");
+  backButton.innerText = "Go Back";
+  container.appendChild(backButton);
+
+  backButton.addEventListener("click", function() {
+    document.body.innerHTML = "";
+    startScreen();
+  });
+}
 
 document.addEventListener("keypress", function(e) {
   if (gameStarted) {
