@@ -35,6 +35,6 @@ Did not start clearly-defined motivations. However, motivation was quick to aris
 - some CSS animation
 - slight approximation of the order in which code is run
 
-And most importantly: to focus on small problems, rather than tackling the whole. 
+And most importantly: to focus on small problems, rather than attempting to tackle the whole. 
 
 
