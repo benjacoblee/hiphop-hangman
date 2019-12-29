@@ -28,17 +28,6 @@ p {
   height: 100%;
 }
 
-.start-button,
-.instructions-button,
-.back-button,
-.buy-back-button,
-.retry-button {
-  margin: 5px;
-  width: 70%;
-  color: black;
-  border-radius: 5px;
-}
-
 .author-message {
   font-size: 1rem;
   margin-top: 100px;
@@ -59,10 +48,30 @@ p {
   font-size: 1.5rem;
 }
 
+.displayed-guess {
+  font-size: 7rem;
+}
+
+.correct-guess-message,
+.wrong-guess-message {
+  font-size: 10rem;
+}
+
+.hint-button-fade-out {
+  -webkit-animation: fadeOut 2s;
+  -moz-animation: fadeOut 2s;
+  -ms-animation: fadeOut 2s;
+  -o-animation: fadeOut 2s;
+  animation: fadeOut 2s;
+}
+
 h1,
 .start-button,
 .instructions-button,
-.author-message {
+.author-message,
+.win-message,
+.lose-message,
+.retry-button {
   -webkit-animation: fadein 2s;
   -moz-animation: fadein 2s;
   -ms-animation: fadein 2s;
@@ -70,10 +79,22 @@ h1,
   animation: fadein 2s;
 }
 
-.hint-button-fade-out {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 2s, opacity 0.5s linear;
+.start-button,
+.instructions-button,
+.back-button,
+.buy-back-button,
+.retry-button {
+  margin: 5px;
+  width: 70%;
+  color: black;
+  border-radius: 5px;
+}
+
+.start-button:hover,
+.instructions-button:hover,
+.buy-back-button:hover, .retry-button:hover {
+  background-color: #282828;
+  color: white;
 }
 
 @keyframes fadein {
@@ -86,10 +107,10 @@ h1,
 }
 
 @keyframes fadeOut {
-  from {
+  0% {
     opacity: 1;
   }
-  to {
+  100% {
     opacity: 0;
   }
 }
