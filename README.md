@@ -8,13 +8,13 @@ Objective: to guess the rapper's name given a word hint.
 
 The user starts with 10 lives and 10 coins. 
 
-If the user guesses correctly, s/he earns 5 coins.
+If the user guesses correctly, the user earns 5 coins.
 
-If the user guesses incorrectly, s/he loses a life.
+If the user guesses incorrectly, the user loses a life.
 
-If the word hint was ineffective in helping the user guess, s/he has an additional choice of playing an audio clue. This costs 5 coins.
+If the word hint was ineffective in helping the user guess, the user has an additional choice of playing an audio clue. This costs 5 coins.
 
-When user runs out of lives, they can buy a life with 10 coins.
+When user runs out of lives, the user can buy a life with 10 coins.
 
 If the user has 0 lives and less than 10 coins, the game ends.
 
