@@ -24,7 +24,7 @@ HTML, CSS and Javascript.
 
 ## Methodology
 
-I started by implementing the most basic version of the game - matching the user-entered string with a pre-existing string. Once this worked, I slowly added the small stuff: audio placeholders, CSS styling, buttons, display refreshes, etc.
+I started by implementing the most basic version of the game - matching the user-entered string with a pre-existing string. Once this worked, I slowly introduced other elements: audio placeholders, CSS styling, buttons, display refreshes, etc.
 
 ## Motivations
 
