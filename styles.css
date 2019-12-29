@@ -81,20 +81,28 @@ h1,
 
 .start-button,
 .instructions-button,
-.back-button,
-.buy-back-button,
-.retry-button {
+.back-button {
   margin: 5px;
   width: 70%;
   color: black;
   border-radius: 5px;
 }
 
+.buy-back-button,
+.retry-button {
+  margin: 5px;
+  color: black;
+  border-radius: 5px;
+}
+
 .start-button:hover,
 .instructions-button:hover,
-.buy-back-button:hover, .retry-button:hover {
+.back-button:hover,
+.buy-back-button:hover,
+.retry-button:hover {
   background-color: #282828;
   color: white;
+  transition: 1s;
 }
 
 @keyframes fadein {
