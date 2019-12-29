@@ -76,6 +76,7 @@ let displayedCoins;
 let displayedGuess;
 let audioHintButton;
 let retryButton;
+let quitButton;
 let display = true;
 
 const correctAudio = new Audio("./audio/correct-audio.mp3");
@@ -130,12 +131,12 @@ function startGame() {
 function displayInstructions() {
   container.innerHTML = "";
   const instructionsPara = document.createElement("p");
-  instructionsPara.innerText = `Welcome to Hip-Hop Hangman! 
-    Listen to the sound clues provided and guess the rapper! 
-    You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)! 
+  instructionsPara.innerText = `Welcome to Hip-Hop Hangman!
+    Listen to the sound clues provided and guess the rapper!
+    You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)!
     Spend 5 coins to get an audio hint!
     Spend 10 coins to get a life!
-    Enter your choice by simply typing on the keyboard. 
+    Enter your choice by simply typing on the keyboard.
     Have fun and keep it a hunnit 👐`;
   container.appendChild(instructionsPara);
   const backButton = document.createElement("button");
@@ -190,6 +191,12 @@ function newWord() {
     audioHintButton.style.opacity = "0";
   });
 
+  quitButton = document.createElement("button");
+  quitButton.classList.add("quit-button");
+  quitButton.innerText = "Quit";
+
+  quitButton.addEventListener("click", quitGame);
+
   setTimeout(refreshDisplayValues, 200);
 }
 
@@ -202,6 +209,8 @@ function refreshDisplayValues() {
   if (audioHintButton.style.opacity === "1") {
     container.appendChild(audioHintButton);
   }
+
+  container.appendChild(quitButton);
 }
 
 function displayCorrectGuessMessage() {
@@ -231,6 +240,7 @@ function displayWrongGuessMessage() {
     container.removeChild(displayedGuess);
     container.removeChild(hint);
     container.removeChild(audioHintButton);
+    container.removeChild(quitButton);
   }
 
   if (livesLeft !== 0) {
@@ -242,6 +252,7 @@ function displayWrongGuessMessage() {
         container.appendChild(displayedGuess);
         container.appendChild(hint);
         container.appendChild(audioHintButton);
+        container.appendChild(quitButton);
       }
     }, 500);
   }
@@ -273,12 +284,22 @@ function createRetryButton() {
   container.appendChild(retryButton);
   retryButton.addEventListener("click", function() {
     document.body.innerHTML = "";
-    coins = 0;
     livesLeft = 10;
+    coins = 0;
     correctAudio.play();
     populateRappersArray();
     startScreen();
   });
+}
+
+function quitGame() {
+  document.body.innerHTML = "";
+  gameStarted = 0;
+  livesLeft = 10;
+  coins = 10;
+  rappers = [];
+  populateRappersArray();
+  startScreen();
 }
 
 document.addEventListener("keypress", function(e) {
@@ -312,6 +333,7 @@ document.addEventListener("keypress", function(e) {
               container.removeChild(displayedGuess);
               container.removeChild(hint);
               container.removeChild(audioHintButton);
+              container.removeChild(quitButton);
               displayCorrectGuessMessage();
             }
 
@@ -350,8 +372,9 @@ document.addEventListener("keypress", function(e) {
       container.appendChild(buyBackMessage);
       const buyBackButton = document.createElement("button");
       buyBackButton.classList.add("buy-back-button");
-      buyBackButton.innerText = "Buy back";
+      buyBackButton.innerText = "Buy life";
       container.appendChild(buyBackButton);
+      container.appendChild(quitButton);
       buyBackButton.addEventListener("click", buyBack);
     }
     if (livesLeft === 0 && coins < 10) {
@@ -362,7 +385,7 @@ document.addEventListener("keypress", function(e) {
       container.innerText = "";
       const loseMessage = document.createElement("p");
       loseMessage.classList.add("lose-message");
-      loseMessage.innerText = `You lose! 
+      loseMessage.innerText = `You lose!
       Correct guesses: ${correctGuesses}`;
       container.appendChild(loseMessage);
 
@@ -371,6 +394,12 @@ document.addEventListener("keypress", function(e) {
       }
       createRetryButton();
       retryButton.addEventListener("click", function() {
+        loseAudio.pause();
+      });
+
+      container.appendChild(quitButton);
+      quitButton.classList.add("quit-button-fade-in");
+      quitButton.addEventListener("click", function() {
         loseAudio.pause();
       });
     }
