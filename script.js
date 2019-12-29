@@ -162,7 +162,7 @@ function newWord() {
     guess[i] = "_";
   }
   displayedGuess.innerText = guess.join("");
-  displayedGuess.style.fontSize = "7rem";
+  displayedGuess.classList.add("displayed-guess");
 
   makeLivesString();
 
@@ -174,7 +174,6 @@ function newWord() {
   audioHintButton.classList.add("audio-hint-button");
   audioHintButton.innerText = "Get audio hint";
   audioHintButton.style.opacity = "1";
-  console.log(audioHintButton.style.opacity);
 
   audioHintButton.addEventListener("click", function() {
     audio.play();
@@ -202,7 +201,7 @@ function refreshDisplayValues() {
 
 function displayCorrectGuessMessage() {
   const correctGuessMessage = document.createElement("p");
-  correctGuessMessage.style.fontSize = "10rem";
+  correctGuessMessage.classList.add("correct-guess-message");
   correctGuessMessage.innerText = "YEAH";
   container.appendChild(correctGuessMessage);
   setTimeout(function() {
@@ -214,7 +213,7 @@ function displayCorrectGuessMessage() {
 
 function displayWrongGuessMessage() {
   const wrongGuessMessage = document.createElement("p");
-  wrongGuessMessage.style.fontSize = "10rem";
+  wrongGuessMessage.classList.add("wrong-guess-message");
   wrongGuessMessage.innerText = `WRONG
                                 Lives left: ${livesLeft}
                                 `;
