@@ -1,51 +1,4 @@
-let rappers = [
-  {
-    rapper: "snoop",
-    hint: "Formerly known as _____ Lion"
-  },
-  {
-    rapper: "biggie",
-    hint: "Opposite of small"
-  },
-  {
-    rapper: "tupac",
-    hint: "More than one pack"
-  },
-  {
-    rapper: "eminem",
-    hint: "Also the name of a popular chocolate brand"
-  },
-  {
-    rapper: "50cent",
-    hint: "Half a dollar"
-  },
-  {
-    rapper: "kendrick",
-    hint: "Don't kill my vibe"
-  },
-  {
-    rapper: "outkast",
-    hint: "Pariahs"
-  },
-  { rapper: "jayz", hint: "Yonce's husband" },
-  { rapper: "icecube", hint: "Something you might put in soda" },
-  { rapper: "dre", hint: "Not a real doctor" },
-  { rapper: "drake", hint: "Short form for dragon" }, // TO CHANGE DRAKE SONG
-  { rapper: "DMX", hint: "Deadpool soundtrack" },
-  { rapper: "kanye", hint: "YEEZUS" },
-  {
-    rapper: "chamillionaire",
-    hint: "Only really famous for that one song"
-  },
-  {
-    rapper: "chingy",
-    hint: "I like the way you do it right thurr"
-  },
-  {
-    rapper: "bowwow",
-    hint: "Dog sounds"
-  }
-];
+let rappers = [];
 
 function populateRappersArray() {
   rappers = [
@@ -163,6 +116,7 @@ function startGame() {
   gameStarted = true;
 
   if (gameStarted) {
+    populateRappersArray();
     displayCorrectGuessMessage();
     newWord();
     winAudio.play();
@@ -219,6 +173,8 @@ function newWord() {
   audioHintButton = document.createElement("button");
   audioHintButton.classList.add("audio-hint-button");
   audioHintButton.innerText = "Get audio hint";
+  audioHintButton.style.opacity = "1";
+  console.log(audioHintButton.style.opacity);
 
   audioHintButton.addEventListener("click", function() {
     audio.play();
@@ -227,6 +183,7 @@ function newWord() {
     container.innerHTML = "";
     refreshDisplayValues();
     audioHintButton.classList.add("hint-button-fade-out");
+    audioHintButton.style.opacity = "0";
   });
 
   setTimeout(refreshDisplayValues, 200);
@@ -237,7 +194,10 @@ function refreshDisplayValues() {
   container.appendChild(displayedCoins);
   container.appendChild(displayedGuess);
   container.appendChild(hint);
-  container.appendChild(audioHintButton);
+
+  if (audioHintButton.style.opacity === "1") {
+    container.appendChild(audioHintButton);
+  }
 }
 
 function displayCorrectGuessMessage() {
@@ -364,12 +324,14 @@ document.addEventListener("keypress", function(e) {
       }
     }
     if (rappers.length === 0) {
+      gameStarted = false;
       container.innerHTML = "";
 
       endAudio = new Audio("./audio/end-audio.mp3");
       endAudio.play();
 
       const winMessage = document.createElement("p");
+      winMessage.classList.add("win-message");
       winMessage.innerText = "You won!";
       populateRappersArray();
       container.appendChild(winMessage);
@@ -394,6 +356,7 @@ document.addEventListener("keypress", function(e) {
 
       container.innerText = "";
       const loseMessage = document.createElement("p");
+      loseMessage.classList.add("lose-message");
       loseMessage.innerText = `You lose! 
       Correct guesses: ${correctGuesses}`;
       container.appendChild(loseMessage);
