@@ -33,8 +33,11 @@ function populateRappersArray() {
     { rapper: "jayz", hint: "Yonce's husband" },
     { rapper: "icecube", hint: "Something you might put in soda" },
     { rapper: "dre", hint: "Not a real doctor" },
-    { rapper: "drake", hint: "Short form for dragon" },
-    { rapper: "DMX", hint: "Deadpool soundtrack" },
+    { rapper: "drake", hint: "Canadian dragon" },
+    {
+      rapper: "DMX",
+      hint: "Rapper known for iconic song in Deadpool soundtrack"
+    },
     { rapper: "kanye", hint: "YEEZUS" },
     {
       rapper: "chamillionaire",
@@ -42,7 +45,7 @@ function populateRappersArray() {
     },
     {
       rapper: "chingy",
-      hint: "I like the way you do it right thurr"
+      hint: "Also one call away"
     },
     {
       rapper: "bowwow",
@@ -75,9 +78,10 @@ let audioHintButton;
 let retryButton;
 let display = true;
 
+const correctAudio = new Audio("./audio/correct-audio.mp3");
+const wrongAudio = new Audio("./audio/wrong-audio.mp3");
 const winAudio = new Audio("./audio/win-audio.mp3");
 const loseAudio = new Audio("./audio/lose-audio.mp3");
-let endAudio;
 
 function startScreen() {
   container = document.createElement("div");
@@ -119,7 +123,7 @@ function startGame() {
     populateRappersArray();
     displayCorrectGuessMessage();
     newWord();
-    winAudio.play();
+    correctAudio.play();
   }
 }
 
@@ -130,6 +134,7 @@ function displayInstructions() {
     Listen to the sound clues provided and guess the rapper! 
     You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)! 
     Spend 5 coins to get an audio hint!
+    Spend 10 coins to get a life!
     Enter your choice by simply typing on the keyboard. 
     Have fun and keep it a hunnit 👐`;
   container.appendChild(instructionsPara);
@@ -146,7 +151,7 @@ function displayInstructions() {
 
 function newWord() {
   gameStarted = true;
-  winAudio.play();
+  correctAudio.play();
 
   ranNum = Math.floor(Math.random() * rappers.length);
   audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
@@ -270,7 +275,7 @@ function createRetryButton() {
     document.body.innerHTML = "";
     coins = 0;
     livesLeft = 10;
-    winAudio.play();
+    correctAudio.play();
     populateRappersArray();
     startScreen();
   });
@@ -317,7 +322,7 @@ document.addEventListener("keypress", function(e) {
         }
       } else {
         livesLeft--;
-        loseAudio.play();
+        wrongAudio.play();
         displayWrongGuessMessage();
         makeLivesString();
       }
@@ -326,8 +331,7 @@ document.addEventListener("keypress", function(e) {
       gameStarted = false;
       container.innerHTML = "";
 
-      endAudio = new Audio("./audio/end-audio.mp3");
-      endAudio.play();
+      winAudio.play();
 
       const winMessage = document.createElement("p");
       winMessage.classList.add("win-message");
@@ -336,7 +340,7 @@ document.addEventListener("keypress", function(e) {
       container.appendChild(winMessage);
       createRetryButton();
       retryButton.addEventListener("click", function() {
-        endAudio.pause();
+        winAudio.pause();
       });
     }
     if (livesLeft === 0 && coins >= 10) {
@@ -353,6 +357,8 @@ document.addEventListener("keypress", function(e) {
     if (livesLeft === 0 && coins < 10) {
       gameStarted = false;
 
+      loseAudio.play();
+
       container.innerText = "";
       const loseMessage = document.createElement("p");
       loseMessage.classList.add("lose-message");
@@ -364,6 +370,9 @@ document.addEventListener("keypress", function(e) {
         populateRappersArray();
       }
       createRetryButton();
+      retryButton.addEventListener("click", function() {
+        loseAudio.pause();
+      });
     }
   }
 });
