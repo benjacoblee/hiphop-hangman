@@ -199,7 +199,7 @@ function newWord() {
 
   timerMessage = document.createElement("p");
   timerMessage.classList.add("timer-message");
-  timerStartValue = 500;
+  timerStartValue = 1000;
 
   countdownTimer = setInterval(displayCountdownMessage, 10);
 
@@ -236,7 +236,7 @@ function newWord() {
     container.innerHTML = "";
     livesLeft--;
     clearInterval(countdownTimer);
-    timerStartValue = 500;
+    timerStartValue = 1000;
     countdownTimer = setInterval(displayCountdownMessage, 10);
     makeLivesString();
     refreshDisplayValues();
@@ -244,7 +244,7 @@ function newWord() {
       loseGame();
       clearInterval(loseLifeTimer);
     }
-  }, 5000);
+  }, 10000);
 }
 
 function refreshDisplayValues() {
@@ -457,21 +457,21 @@ document.addEventListener("keypress", function(e) {
         clearInterval(loseLifeTimer);
         clearInterval(countdownTimer);
 
-        timerStartValue = 500;
+        timerStartValue = 1000;
         countdownTimer = setInterval(displayCountdownMessage, 10);
 
         loseLifeTimer = setInterval(function() {
           container.innerHTML = "";
           livesLeft--;
           clearInterval(countdownTimer);
-          timerStartValue = 500;
+          timerStartValue = 1000;
           countdownTimer = setInterval(displayCountdownMessage, 10);
           makeLivesString();
           refreshDisplayValues();
           if (livesLeft === 0) {
             loseGame();
           }
-        }, 5000);
+        }, 10000);
 
         livesLeft--;
         wrongAudio.play();
