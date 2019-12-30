@@ -398,9 +398,6 @@ function quitGame() {
 
 function displayCountdownMessage() {
   timerMessage.innerText = `Time left: ${timerStartValue--}`;
-  if (timerStartValue === -1) {
-    clearInterval(countdownTimer);
-  }
 }
 
 document.addEventListener("keypress", function(e) {
@@ -421,7 +418,27 @@ document.addEventListener("keypress", function(e) {
             secretWord[i] === enteredKey &&
             guess[i].includes(enteredKey)
           ) {
-            console.log("you've already guessed that");
+            container.innerHTML = "";
+            console.log("you already guessed that");
+
+            const alreadyGuessedMessage = document.createElement("p");
+            alreadyGuessedMessage.innerText = "You already guessed that!";
+            container.appendChild(alreadyGuessedMessage);
+
+            setTimeout(function() {
+              if (alreadyGuessedMessage.parentNode === container) {
+                container.removeChild(alreadyGuessedMessage);
+                container.appendChild(displayedLives);
+                container.appendChild(displayedCoins);
+                container.appendChild(timerMessage);
+                container.appendChild(displayedGuess);
+                container.appendChild(hint);
+                if (audioHintButton.style.opacity === "1") {
+                  container.appendChild(audioHintButton);
+                }
+                container.appendChild(quitButton);
+              }
+            }, 300);
           }
           if (secretWord === guess.join("")) {
             audio.pause();
@@ -438,7 +455,10 @@ document.addEventListener("keypress", function(e) {
               container.removeChild(displayedGuess);
               container.removeChild(timerMessage);
               container.removeChild(hint);
-              container.removeChild(quitButton);
+              if (quitButton.parentNode === container) {
+                container.removeChild(quitButton);
+              }
+
               displayCorrectGuessMessage();
             }
 
