@@ -43,18 +43,14 @@ p {
   border-radius: 5px;
 }
 
-.displayed-lives, .displayed-coins, .timer-message {
-  margin-right: auto;
-  font-size: 1.5rem;
-}
-
 .displayed-guess {
   font-size: 7rem;
 }
 
-.correct-guess-message,
-.wrong-guess-message {
-  font-size: 10rem;
+.win-gif {
+  border-radius: 50%;
+  width: 50%;
+  margin: 0 0 10px;
 }
 
 .hint-button-fade-out {
@@ -65,20 +61,14 @@ p {
   animation: fadeOut 2s;
 }
 
-h1,
-.normal-mode-button,
-.speed-mode-button,
-.instructions-button,
-.author-message,
-.win-message,
-.lose-message,
-.retry-button,
-.quit-button-fade-in {
-  -webkit-animation: fadein 2s;
-  -moz-animation: fadein 2s;
-  -ms-animation: fadein 2s;
-  -o-animation: fadein 2s;
-  animation: fadein 2s;
+.correct-guess-message,
+.wrong-guess-message {
+  font-size: 10rem;
+}
+
+.displayed-lives, .displayed-coins, .timer-message {
+  margin-right: auto;
+  font-size: 1.5rem;
 }
 
 .normal-mode-button,
@@ -112,6 +102,23 @@ h1,
   background-color: #282828;
   color: white;
   transition: 1s;
+}
+
+h1,
+.normal-mode-button,
+.speed-mode-button,
+.instructions-button,
+.author-message,
+.win-message,
+.win-gif,
+.lose-message,
+.retry-button,
+.quit-button-fade-in {
+  -webkit-animation: fadein 2s;
+  -moz-animation: fadein 2s;
+  -ms-animation: fadein 2s;
+  -o-animation: fadein 2s;
+  animation: fadein 2s;
 }
 
 @keyframes fadein {
