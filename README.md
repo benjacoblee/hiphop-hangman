@@ -1,8 +1,8 @@
-# Hip-Hop Hangman 
+# Hip-Hop Hangman 👐🏼
 
 ![](https://media.giphy.com/media/ScZzMlETdv9mg/giphy.gif)
 
-Hip-hop flavored Hangman game. Only for the realest 👐🏼
+Hip-hop flavored Hangman game. Only for the realest.
 
 ## Rules 💸
 
