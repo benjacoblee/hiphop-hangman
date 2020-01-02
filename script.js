@@ -109,7 +109,6 @@ function populateRappersArray() {
   ];
 }
 
-let fosho = false;
 let ranNum;
 let secretWord;
 let audio;
@@ -603,7 +602,6 @@ function normalModeEventListener(e) {
             guess[i].includes(enteredKey)
           ) {
             container.innerHTML = "";
-            console.log("you already guessed that");
 
             const alreadyGuessedMessage = document.createElement("p");
             alreadyGuessedMessage.innerText = "You already guessed that!";
@@ -728,7 +726,6 @@ function speedModeEventListener(e) {
             guess[i].includes(enteredKey)
           ) {
             container.innerHTML = "";
-            console.log("you already guessed that");
 
             const alreadyGuessedMessage = document.createElement("p");
             alreadyGuessedMessage.innerText = "You already guessed that!";
