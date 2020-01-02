@@ -2,6 +2,7 @@ body,
 html {
   height: 100%;
 }
+
 body {
   font-family: "Permanent Marker", cursive;
   background-color: #282828;
@@ -28,6 +29,10 @@ p {
   height: 100%;
 }
 
+.cancel-message {
+  font-size: 10rem;
+}
+
 .author-message {
   font-size: 1rem;
   margin-top: 100px;
@@ -38,12 +43,7 @@ p {
   border-radius: 5px;
 }
 
-.displayed-lives {
-  margin-right: auto;
-  font-size: 1.5rem;
-}
-
-.displayed-coins {
+.displayed-lives, .displayed-coins, .timer-message {
   margin-right: auto;
   font-size: 1.5rem;
 }
@@ -66,12 +66,14 @@ p {
 }
 
 h1,
-.start-button,
+.normal-mode-button,
+.speed-mode-button,
 .instructions-button,
 .author-message,
 .win-message,
 .lose-message,
-.retry-button {
+.retry-button,
+.quit-button-fade-in {
   -webkit-animation: fadein 2s;
   -moz-animation: fadein 2s;
   -ms-animation: fadein 2s;
@@ -79,7 +81,8 @@ h1,
   animation: fadein 2s;
 }
 
-.start-button,
+.normal-mode-button,
+.speed-mode-button,
 .instructions-button,
 .back-button {
   margin: 5px;
@@ -89,17 +92,23 @@ h1,
 }
 
 .buy-back-button,
-.retry-button {
+.retry-button,
+.audio-hint-button,
+.quit-button {
   margin: 5px;
   color: black;
   border-radius: 5px;
 }
 
+.normal-mode-button:hover,
+.speed-mode-button:hover,
 .start-button:hover,
 .instructions-button:hover,
 .back-button:hover,
 .buy-back-button:hover,
-.retry-button:hover {
+.retry-button:hover,
+.audio-hint-button:hover,
+.quit-button:hover {
   background-color: #282828;
   color: white;
   transition: 1s;

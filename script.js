@@ -1,3 +1,27 @@
+window.onload = askIfReal;
+
+function askIfReal() {
+  Swal.fire({
+    title: "Only for the realest!",
+    text: "Do you want to continue?",
+    icon: "warning",
+    confirmButtonText: "fosho",
+    showCancelButton: true,
+    cancelButtonText: "nah",
+    cancelButtonColor: "#f2201d"
+  }).then(function(result) {
+    if (result.value) {
+      setTimeout(startScreen, 200);
+    } else if (result.dismiss) {
+      setTimeout(cancelScreen, 200);
+      setTimeout(function() {
+        document.body.innerHTML = "";
+      }, 1000);
+      setTimeout(askIfReal, 1500);
+    }
+  });
+}
+
 let rappers = [];
 
 function populateRappersArray() {
@@ -19,7 +43,7 @@ function populateRappersArray() {
       hint: "also the name of a popular chocolate brand"
     },
     {
-      rapper: "50cent",
+      rapper: "50 cent",
       hint: "half a dollar"
     },
     {
@@ -30,10 +54,10 @@ function populateRappersArray() {
       rapper: "outkast",
       hint: "another word for pariahs"
     },
-    { rapper: "jayz", hint: "yonce's husband" },
-    { rapper: "icecube", hint: "something you might put in soda" },
+    { rapper: "jay z", hint: "yonce's husband" },
+    { rapper: "ice cube", hint: "something you might put in soda" },
     { rapper: "dre", hint: "not a real doctor" },
-    { rapper: "drake", hint: "canadian dragon" },
+    { rapper: "drake", hint: "an obsolete word for dragon" },
     {
       rapper: "DMX",
       hint: "rapper known for iconic song in deadpool soundtrack"
@@ -48,20 +72,43 @@ function populateRappersArray() {
       hint: "also rapper of one call away"
     },
     {
-      rapper: "bowwow",
+      rapper: "bow wow",
       hint: "dog sounds"
     },
     {
-      rapper: "jcole",
+      rapper: "j. cole",
       hint: "bet jay-z regrets rejecting him"
     },
     {
-      rapper: "eazye",
+      rapper: "eazy e",
       hint: "founding member of nwa"
-    }
+    },
+    { rapper: "rakim", hint: "eric b and" },
+    { rapper: "childish gambino", hint: "synonymous with immature" },
+    { rapper: "logic", hint: "something you need for reasoning" },
+    { rapper: "ll cool j", hint: "ladies love cool james" },
+    { rapper: "mos def", hint: "indisputably, unequivocally" },
+    { rapper: "ludacris", hint: "ridiculous" },
+    { rapper: "t.i.", hint: "two meaningless letters" },
+    { rapper: "mac miller", hint: "recently od'ed. rip" },
+    { rapper: "nelly", hint: "Cornell Haynes" },
+    {
+      rapper: "xzibit",
+      hint: "an organised presentation and display of a selection of items"
+    },
+    { rapper: "will smith", hint: "more well-known as an actor. fresh prince" },
+    { rapper: "b.o.b", hint: "a very common name" },
+    {
+      rapper: "post malone",
+      hint: `attained recognition after "white iverson"`
+    },
+    { rapper: "cardi b", hint: "sounds like bacardi, cardio" },
+    { rapper: "nicki minaj", hint: "female, wears colorful wigs" },
+    { rapper: "chance", hint: "a probabilty of something happening" }
   ];
 }
 
+let fosho = false;
 let ranNum;
 let secretWord;
 let audio;
@@ -70,7 +117,7 @@ let guess = [];
 let coins = 10; // 10 coins to buy back 1 life
 let livesLeft = 10;
 let correctGuesses = 0;
-let gameStarted = false;
+let gameStarted = false; // I THINK this was to prevent errors where game hadn't started and event listener was firing
 let livesString;
 
 // startscreen and display stuff
@@ -91,7 +138,6 @@ let loseLifeTimer;
 let timerMessage;
 let timerStartValue;
 let countdownTimer;
-let display = true;
 
 const correctAudio = new Audio("./audio/correct-audio.mp3");
 const wrongAudio = new Audio("./audio/wrong-audio.mp3");
@@ -132,11 +178,19 @@ function startScreen() {
   instructionsButton.addEventListener("click", displayInstructions);
 }
 
-// create startscreen on page load
-startScreen();
+function cancelScreen() {
+  const container = document.createElement("div");
+  container.classList.add("container");
+  document.body.appendChild(container);
+  const cancelMessage = document.createElement("p");
+  cancelMessage.classList.add("cancel-message");
+  cancelMessage.innerText = "what are you doing here, then?";
+  container.appendChild(cancelMessage);
+  wrongAudio.play();
+}
 
 function startNormalMode() {
-  modeChosen = "normal";
+  modeChosen = "normal"; // so that when newWord() runs, it creates elements for the respective mode
   container.removeChild(gameTitle);
   container.removeChild(normalModeButton);
   container.removeChild(speedModeButton);
@@ -336,7 +390,7 @@ function refreshDisplayValues() {
     container.removeChild(displayedLives);
     container.removeChild(displayedCoins);
     if (modeChosen === "speed") {
-      container.removeChild(timerMessage);
+      container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
     }
 
     container.removeChild(displayedGuess);
@@ -355,6 +409,7 @@ function refreshDisplayValues() {
   container.appendChild(hint);
 
   if (audioHintButton.style.opacity === "1") {
+    // means that audio hint button hasn't been clicked yet
     container.appendChild(audioHintButton);
   }
 
@@ -438,7 +493,6 @@ function buyBack() {
   coins -= 10;
   livesLeft++;
   container.innerHTML = "";
-
   newWord();
 }
 
@@ -485,9 +539,8 @@ function loseGame() {
       Correct guesses: ${correctGuesses}`;
   container.appendChild(loseMessage);
 
-  if (rappers.length === 0) {
-    populateRappersArray();
-  }
+  populateRappersArray();
+
   createRetryButton();
   retryButton.addEventListener("click", function() {
     loseAudio.pause();
@@ -513,8 +566,7 @@ function quitGame() {
   document.body.innerHTML = "";
   livesLeft = 10;
   coins = 10;
-  guess = [];
-  rappers = [];
+
   populateRappersArray();
   startScreen();
 }
