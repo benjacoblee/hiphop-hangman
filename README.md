@@ -18,6 +18,8 @@ When user runs out of lives, the user can buy a life with 10 coins.
 
 If the user has 0 lives and less than 10 coins, the game ends.
 
+Now comes with timer! If there was no guess, user loses a life.
+
 ## Technologies Used
 
 HTML, CSS and Javascript.
