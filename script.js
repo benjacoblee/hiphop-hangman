@@ -571,9 +571,9 @@ function loseGame() {
 
 function quitGame() {
   audio.pause();
-  
-  document.removeEventListener("keypress", normalModeEventListener);
-  document.removeEventListener("keypress", speedModeEventListener);
+
+  document.removeEventListener("keydown", normalModeEventListener);
+  document.removeEventListener("keydown", speedModeEventListener);
   secretWord = "";
   gameStarted = false;
   modeChosen = "";
@@ -669,7 +669,7 @@ function normalModeEventListener(e) {
       }
     }
     if (rappers.length === 0) {
-      document.removeEventListener("keypress", normalModeEventListener);
+      document.removeEventListener("keydown", normalModeEventListener);
       gameStarted = false;
       container.innerHTML = "";
 
@@ -707,14 +707,14 @@ function normalModeEventListener(e) {
       buyBackButton.addEventListener("click", buyBack);
     }
     if (livesLeft === 0 && coins < 10) {
-      document.removeEventListener("keypress", normalModeEventListener);
+      document.removeEventListener("keydown", normalModeEventListener);
       loseGame();
     }
   }
 }
 
 function normalMode() {
-  document.addEventListener("keypress", normalModeEventListener);
+  document.addEventListener("keydown", normalModeEventListener);
 }
 
 function speedModeEventListener(e) {
@@ -805,7 +805,7 @@ function speedModeEventListener(e) {
       }
     }
     if (rappers.length === 0) {
-      document.removeEventListener("keypress", speedModeEventListener);
+      document.removeEventListener("keydown", speedModeEventListener);
       gameStarted = false;
       container.innerHTML = "";
 
@@ -848,7 +848,7 @@ function speedModeEventListener(e) {
       clearInterval(countdownTimer);
     }
     if (livesLeft === 0 && coins < 10) {
-      document.removeEventListener("keypress", speedModeEventListener);
+      document.removeEventListener("keydown", speedModeEventListener);
       loseGame();
       clearInterval(loseLifeTimer);
       clearInterval(countdownTimer);
@@ -857,5 +857,7 @@ function speedModeEventListener(e) {
 }
 
 function speedMode() {
-  document.addEventListener("keypress", speedModeEventListener);
+  document.addEventListener("keydown", speedModeEventListener);
 }
+
+
