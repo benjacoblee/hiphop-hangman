@@ -464,8 +464,13 @@ function displayWrongGuessMessage() {
       container.removeChild(timerMessage);
     }
 
-    if (audioHintButton.style.opacity === "1") {
-      container.removeChild(audioHintButton);
+    if (
+      audioHintButton.style.opacity === "1" ||
+      audioHintButton.style.opacity === "0"
+    ) {
+      if (audioHintButton.parentNode === container) {
+        container.removeChild(audioHintButton);
+      }
     }
 
     container.removeChild(quitButton);
@@ -859,5 +864,3 @@ function speedModeEventListener(e) {
 function speedMode() {
   document.addEventListener("keydown", speedModeEventListener);
 }
-
-
