@@ -11,6 +11,7 @@ function askIfReal() {
     cancelButtonColor: "#f2201d"
   }).then(function(result) {
     if (result.value) {
+      correctAudio.play();
       setTimeout(startScreen, 200);
     } else if (result.dismiss) {
       setTimeout(cancelScreen, 200);
@@ -661,8 +662,17 @@ function normalModeEventListener(e) {
       const winMessage = document.createElement("p");
       winMessage.classList.add("win-message");
       winMessage.innerText = "You won!";
-      populateRappersArray();
       container.appendChild(winMessage);
+
+      const winGif = document.createElement("img");
+      winGif.classList.add("win-gif");
+      winGif.setAttribute(
+        "src",
+        "https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif"
+      );
+      container.appendChild(winGif);
+
+      populateRappersArray();
       createRetryButton();
       retryButton.addEventListener("click", function() {
         winAudio.pause();
@@ -789,8 +799,17 @@ function speedModeEventListener(e) {
       const winMessage = document.createElement("p");
       winMessage.classList.add("win-message");
       winMessage.innerText = "You won!";
-      populateRappersArray();
       container.appendChild(winMessage);
+
+      const winGif = document.createElement("img");
+      winGif.classList.add("win-gif");
+      winGif.setAttribute(
+        "src",
+        "https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif"
+      );
+      container.appendChild(winGif);
+      
+      populateRappersArray();
       createRetryButton();
       retryButton.addEventListener("click", function() {
         winAudio.pause();
