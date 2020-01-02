@@ -298,7 +298,7 @@ function newWord() {
     // setting opacity in stylesheet returns undefined value for some reason
     audioHintButton.style.opacity = "1";
 
-    audioHintButton.addEventListener("click", function() {
+    function getAudioHint() {
       audio.play();
       coins -= 5;
       displayedCoins.innerText = `Coins: ${coins}`;
@@ -308,7 +308,11 @@ function newWord() {
       refreshDisplayValues();
       audioHintButton.classList.add("hint-button-fade-out");
       audioHintButton.style.opacity = "0";
-    });
+
+      audioHintButton.removeEventListener("click", getAudioHint);
+    }
+
+    audioHintButton.addEventListener("click", getAudioHint);
 
     quitButton = document.createElement("button");
     quitButton.classList.add("quit-button");
@@ -367,7 +371,7 @@ function newWord() {
     // setting opacity in stylesheet returns undefined value for some reason
     audioHintButton.style.opacity = "1";
 
-    audioHintButton.addEventListener("click", function() {
+    function getAudioHint() {
       audio.play();
       coins -= 5;
       displayedCoins.innerText = `Coins: ${coins}`;
@@ -377,7 +381,11 @@ function newWord() {
       refreshDisplayValues();
       audioHintButton.classList.add("hint-button-fade-out");
       audioHintButton.style.opacity = "0";
-    });
+
+      audioHintButton.removeEventListener("click", getAudioHint);
+    }
+
+    audioHintButton.addEventListener("click", getAudioHint);
 
     quitButton = document.createElement("button");
     quitButton.classList.add("quit-button");
@@ -562,6 +570,8 @@ function loseGame() {
 }
 
 function quitGame() {
+  audio.pause();
+  
   document.removeEventListener("keypress", normalModeEventListener);
   document.removeEventListener("keypress", speedModeEventListener);
   secretWord = "";
