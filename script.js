@@ -236,7 +236,7 @@ function startSpeedMode() {
 function displayInstructions() {
   container.innerHTML = "";
   const instructionsPara = document.createElement("p");
-  instructionsPara.classList.add("instructions-para")
+  instructionsPara.classList.add("instructions-para");
   instructionsPara.innerText = `Welcome to Hip-Hop Hangman!
     Listen to the sound clues provided and guess the rapper!
     You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)!
@@ -542,9 +542,24 @@ function loseLife() {
     countdownTimer = setInterval(displayCountdownMessage, 10);
     makeLivesString();
     refreshDisplayValues();
-    if (livesLeft === 0) {
-      loseGame();
+    if (livesLeft === 0 && coins >= 10) {
+      container.innerText = "";
+      const buyBackMessage = document.createElement("p");
+      buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
+      container.appendChild(buyBackMessage);
+      const buyBackButton = document.createElement("button");
+      buyBackButton.classList.add("buy-back-button");
+      buyBackButton.innerText = "Buy life";
+      container.appendChild(buyBackButton);
+      container.appendChild(quitButton);
+      buyBackButton.addEventListener("click", buyBack);
       clearInterval(loseLifeTimer);
+      clearInterval(countdownTimer);
+    } else if (livesLeft === 0 && coins < 10) {
+      clearInterval(loseLifeTimer);
+      clearInterval(countdownTimer);
+      document.removeEventListener("keydown", speedModeEventListener);
+      loseGame();
     }
   }, 10000);
 }
@@ -552,7 +567,7 @@ function loseLife() {
 function loseGame() {
   gameStarted = false;
 
-  loseAudio.play();
+  let playPromise = loseAudio.play();
 
   container.innerText = "";
   const loseMessage = document.createElement("p");
@@ -564,14 +579,17 @@ function loseGame() {
   populateRappersArray();
 
   createRetryButton();
+
   retryButton.addEventListener("click", function() {
     loseAudio.pause();
+    loseAudio.currentTime = 0;
   });
 
   container.appendChild(quitButton);
   quitButton.classList.add("quit-button-fade-in");
   quitButton.addEventListener("click", function() {
     loseAudio.pause();
+    loseAudio.currentTime = 0;
   });
 }
 
@@ -836,26 +854,6 @@ function speedModeEventListener(e) {
         winAudio.pause();
       });
 
-      clearInterval(loseLifeTimer);
-      clearInterval(countdownTimer);
-    }
-    if (livesLeft === 0 && coins >= 10) {
-      container.innerText = "";
-      const buyBackMessage = document.createElement("p");
-      buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
-      container.appendChild(buyBackMessage);
-      const buyBackButton = document.createElement("button");
-      buyBackButton.classList.add("buy-back-button");
-      buyBackButton.innerText = "Buy life";
-      container.appendChild(buyBackButton);
-      container.appendChild(quitButton);
-      buyBackButton.addEventListener("click", buyBack);
-      clearInterval(loseLifeTimer);
-      clearInterval(countdownTimer);
-    }
-    if (livesLeft === 0 && coins < 10) {
-      document.removeEventListener("keydown", speedModeEventListener);
-      loseGame();
       clearInterval(loseLifeTimer);
       clearInterval(countdownTimer);
     }
