@@ -236,6 +236,7 @@ function startSpeedMode() {
 function displayInstructions() {
   container.innerHTML = "";
   const instructionsPara = document.createElement("p");
+  instructionsPara.classList.add("instructions-para")
   instructionsPara.innerText = `Welcome to Hip-Hop Hangman!
     Listen to the sound clues provided and guess the rapper!
     You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)!

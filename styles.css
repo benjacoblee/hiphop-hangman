@@ -42,6 +42,10 @@ p {
   font-size: 1rem;
 }
 
+.instructions-para {
+  font-size: 2rem;
+}
+
 .audio-hint-button {
   color: black;
   border-radius: 5px;
