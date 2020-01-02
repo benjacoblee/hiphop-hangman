@@ -76,7 +76,9 @@ let livesString;
 // startscreen and display stuff
 let container;
 let gameTitle;
-let startButton;
+let normalModeButton;
+let speedModeButton;
+let modeChosen;
 let instructionsButton;
 let creatorMessage;
 let displayedLives;
@@ -104,10 +106,17 @@ function startScreen() {
   gameTitle = document.createElement("h1");
   gameTitle.innerText = "Hip-Hop Hangman";
   container.appendChild(gameTitle);
-  startButton = document.createElement("button");
-  startButton.classList.add("start-button");
-  startButton.innerText = "Start";
-  container.appendChild(startButton);
+
+  normalModeButton = document.createElement("button");
+  normalModeButton.classList.add("normal-mode-button");
+  normalModeButton.innerText = "Normal Mode";
+  container.appendChild(normalModeButton);
+
+  speedModeButton = document.createElement("button");
+  speedModeButton.classList.add("speed-mode-button");
+  speedModeButton.innerText = "Speed Mode";
+  container.appendChild(speedModeButton);
+
   instructionsButton = document.createElement("button");
   instructionsButton.classList.add("instructions-button");
   instructionsButton.innerText = "Instructions";
@@ -118,16 +127,19 @@ function startScreen() {
   creatorMessage.innerText = "Made with ❤ by Ben Jacob Lee";
   container.appendChild(creatorMessage);
 
-  startButton.addEventListener("click", startGame);
+  normalModeButton.addEventListener("click", startNormalMode);
+  speedModeButton.addEventListener("click", startSpeedMode);
   instructionsButton.addEventListener("click", displayInstructions);
 }
 
 // create startscreen on page load
 startScreen();
 
-function startGame() {
+function startNormalMode() {
+  modeChosen = "normal";
   container.removeChild(gameTitle);
-  container.removeChild(startButton);
+  container.removeChild(normalModeButton);
+  container.removeChild(speedModeButton);
   container.removeChild(instructionsButton);
   container.removeChild(creatorMessage);
   gameStarted = true;
@@ -135,6 +147,25 @@ function startGame() {
   if (gameStarted) {
     populateRappersArray();
     displayCorrectGuessMessage();
+    normalMode();
+    newWord();
+    correctAudio.play();
+  }
+}
+
+function startSpeedMode() {
+  modeChosen = "speed";
+  container.removeChild(gameTitle);
+  container.removeChild(normalModeButton);
+  container.removeChild(speedModeButton);
+  container.removeChild(instructionsButton);
+  container.removeChild(creatorMessage);
+  gameStarted = true;
+
+  if (gameStarted) {
+    populateRappersArray();
+    displayCorrectGuessMessage();
+    speedMode();
     newWord();
     correctAudio.play();
   }
@@ -163,95 +194,151 @@ function displayInstructions() {
 }
 
 function newWord() {
-  gameStarted = true;
-  correctAudio.play();
+  if (modeChosen === "normal") {
+    gameStarted = true;
+    correctAudio.play();
 
-  ranNum = Math.floor(Math.random() * rappers.length);
+    ranNum = Math.floor(Math.random() * rappers.length);
 
-  // use string interpolation to choose rapper from array and play corresponding audio
-  audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
-  audio.currentTime = 0;
+    // use string interpolation to choose rapper from array and play corresponding audio
+    audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
+    audio.currentTime = 0;
 
-  hint = document.createElement("p");
-  hint.innerText = rappers[ranNum].hint;
+    hint = document.createElement("p");
+    hint.innerText = rappers[ranNum].hint;
 
-  secretWord = rappers[ranNum].rapper;
-  secretWord = secretWord.toLowerCase();
+    secretWord = rappers[ranNum].rapper;
+    secretWord = secretWord.toLowerCase();
 
-  // empties guess array in preparation for new word
-  guess = [];
+    // empties guess array in preparation for new word
+    guess = [];
 
-  // populates guessArray with underscores to correspond to length of secret word
-  for (let i = 0; i < secretWord.length; i++) {
-    guess[i] = "_";
-  }
+    // populates guessArray with underscores to correspond to length of secret word
+    for (let i = 0; i < secretWord.length; i++) {
+      guess[i] = "_";
+    }
 
-  displayedGuess = document.createElement("p");
-  displayedGuess.classList.add("displayedGuess");
-  displayedGuess.innerText = guess.join("");
-  displayedGuess.classList.add("displayed-guess");
+    displayedGuess = document.createElement("p");
+    displayedGuess.classList.add("displayedGuess");
+    displayedGuess.innerText = guess.join("");
+    displayedGuess.classList.add("displayed-guess");
 
-  makeLivesString();
+    makeLivesString();
 
-  displayedCoins = document.createElement("p");
-  displayedCoins.classList.add("displayed-coins");
-  displayedCoins.innerText = `Coins: ${coins}`;
-
-  timerMessage = document.createElement("p");
-  timerMessage.classList.add("timer-message");
-  timerStartValue = 1000;
-
-  countdownTimer = setInterval(displayCountdownMessage, 10);
-
-  audioHintButton = document.createElement("button");
-  audioHintButton.classList.add("audio-hint-button");
-  audioHintButton.innerText = "Get audio hint";
-
-  // setting opacity in stylesheet returns undefined value for some reason
-  audioHintButton.style.opacity = "1";
-
-  audioHintButton.addEventListener("click", function() {
-    audio.play();
-    coins -= 5;
+    displayedCoins = document.createElement("p");
+    displayedCoins.classList.add("displayed-coins");
     displayedCoins.innerText = `Coins: ${coins}`;
 
-    // clear out container to refresh display values with new coin value
-    container.innerHTML = "";
-    refreshDisplayValues();
-    audioHintButton.classList.add("hint-button-fade-out");
-    audioHintButton.style.opacity = "0";
-  });
+    audioHintButton = document.createElement("button");
+    audioHintButton.classList.add("audio-hint-button");
+    audioHintButton.innerText = "Get audio hint";
 
-  quitButton = document.createElement("button");
-  quitButton.classList.add("quit-button");
-  quitButton.innerText = "Quit";
+    // setting opacity in stylesheet returns undefined value for some reason
+    audioHintButton.style.opacity = "1";
 
-  quitButton.addEventListener("click", quitGame);
+    audioHintButton.addEventListener("click", function() {
+      audio.play();
+      coins -= 5;
+      displayedCoins.innerText = `Coins: ${coins}`;
 
-  // to refresh displayed coin value
+      // clear out container to refresh display values with new coin value
+      container.innerHTML = "";
+      refreshDisplayValues();
+      audioHintButton.classList.add("hint-button-fade-out");
+      audioHintButton.style.opacity = "0";
+    });
 
-  setTimeout(refreshDisplayValues, 200);
+    quitButton = document.createElement("button");
+    quitButton.classList.add("quit-button");
+    quitButton.innerText = "Quit";
 
-  loseLifeTimer = setInterval(function() {
-    container.innerHTML = "";
-    livesLeft--;
-    clearInterval(countdownTimer);
-    timerStartValue = 1000;
-    countdownTimer = setInterval(displayCountdownMessage, 10);
-    makeLivesString();
-    refreshDisplayValues();
-    if (livesLeft === 0) {
-      loseGame();
-      clearInterval(loseLifeTimer);
+    quitButton.addEventListener("click", quitGame);
+
+    // to refresh displayed coin value
+
+    setTimeout(refreshDisplayValues, 200);
+  } else if (modeChosen === "speed") {
+    gameStarted = true;
+    correctAudio.play();
+
+    ranNum = Math.floor(Math.random() * rappers.length);
+
+    // use string interpolation to choose rapper from array and play corresponding audio
+    audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
+    audio.currentTime = 0;
+
+    hint = document.createElement("p");
+    hint.innerText = rappers[ranNum].hint;
+
+    secretWord = rappers[ranNum].rapper;
+    secretWord = secretWord.toLowerCase();
+
+    // empties guess array in preparation for new word
+    guess = [];
+
+    // populates guessArray with underscores to correspond to length of secret word
+    for (let i = 0; i < secretWord.length; i++) {
+      guess[i] = "_";
     }
-  }, 10000);
+
+    displayedGuess = document.createElement("p");
+    displayedGuess.classList.add("displayedGuess");
+    displayedGuess.innerText = guess.join("");
+    displayedGuess.classList.add("displayed-guess");
+
+    makeLivesString();
+
+    displayedCoins = document.createElement("p");
+    displayedCoins.classList.add("displayed-coins");
+    displayedCoins.innerText = `Coins: ${coins}`;
+
+    timerMessage = document.createElement("p");
+    timerMessage.classList.add("timer-message");
+    timerStartValue = 1000;
+
+    countdownTimer = setInterval(displayCountdownMessage, 10);
+
+    audioHintButton = document.createElement("button");
+    audioHintButton.classList.add("audio-hint-button");
+    audioHintButton.innerText = "Get audio hint";
+
+    // setting opacity in stylesheet returns undefined value for some reason
+    audioHintButton.style.opacity = "1";
+
+    audioHintButton.addEventListener("click", function() {
+      audio.play();
+      coins -= 5;
+      displayedCoins.innerText = `Coins: ${coins}`;
+
+      // clear out container to refresh display values with new coin value
+      container.innerHTML = "";
+      refreshDisplayValues();
+      audioHintButton.classList.add("hint-button-fade-out");
+      audioHintButton.style.opacity = "0";
+    });
+
+    quitButton = document.createElement("button");
+    quitButton.classList.add("quit-button");
+    quitButton.innerText = "Quit";
+
+    quitButton.addEventListener("click", quitGame);
+
+    // to refresh displayed coin value
+
+    setTimeout(refreshDisplayValues, 200);
+
+    loseLife();
+  }
 }
 
 function refreshDisplayValues() {
   if (displayedLives.parentNode === container) {
     container.removeChild(displayedLives);
     container.removeChild(displayedCoins);
-    container.removeChild(timerMessage);
+    if (modeChosen === "speed") {
+      container.removeChild(timerMessage);
+    }
+
     container.removeChild(displayedGuess);
     container.removeChild(hint);
     container.removeChild(audioHintButton);
@@ -259,7 +346,11 @@ function refreshDisplayValues() {
 
   container.appendChild(displayedLives);
   container.appendChild(displayedCoins);
-  container.appendChild(timerMessage);
+
+  if (modeChosen === "speed") {
+    container.appendChild(timerMessage);
+  }
+
   container.appendChild(displayedGuess);
   container.appendChild(hint);
 
@@ -297,7 +388,11 @@ function displayWrongGuessMessage() {
     container.removeChild(displayedCoins);
     container.removeChild(displayedGuess);
     container.removeChild(hint);
-    container.removeChild(timerMessage);
+
+    if (modeChosen === "speed") {
+      container.removeChild(timerMessage);
+    }
+
     if (audioHintButton.style.opacity === "1") {
       container.removeChild(audioHintButton);
     }
@@ -310,7 +405,11 @@ function displayWrongGuessMessage() {
       if (wrongGuessMessage.parentNode === container) {
         container.appendChild(displayedLives);
         container.appendChild(displayedCoins);
-        container.appendChild(timerMessage);
+
+        if (modeChosen === "speed") {
+          container.appendChild(timerMessage);
+        }
+
         container.removeChild(wrongGuessMessage);
         container.appendChild(displayedGuess);
         container.appendChild(hint);
@@ -351,11 +450,27 @@ function createRetryButton() {
   retryButton.addEventListener("click", function() {
     document.body.innerHTML = "";
     livesLeft = 10;
-    coins = 0;
+    coins = 10;
     correctAudio.play();
     populateRappersArray();
     startScreen();
   });
+}
+
+function loseLife() {
+  loseLifeTimer = setInterval(function() {
+    container.innerHTML = "";
+    livesLeft--;
+    clearInterval(countdownTimer);
+    timerStartValue = 1000;
+    countdownTimer = setInterval(displayCountdownMessage, 10);
+    makeLivesString();
+    refreshDisplayValues();
+    if (livesLeft === 0) {
+      loseGame();
+      clearInterval(loseLifeTimer);
+    }
+  }, 10000);
 }
 
 function loseGame() {
@@ -386,11 +501,19 @@ function loseGame() {
 }
 
 function quitGame() {
-  clearInterval(loseLifeTimer);
-  document.body.innerHTML = "";
+  document.removeEventListener("keypress", normalModeEventListener);
+  document.removeEventListener("keypress", speedModeEventListener);
+  secretWord = "";
   gameStarted = false;
+  modeChosen = "";
+
+  clearInterval(countdownTimer);
+  clearInterval(loseLifeTimer);
+
+  document.body.innerHTML = "";
   livesLeft = 10;
   coins = 10;
+  guess = [];
   rappers = [];
   populateRappersArray();
   startScreen();
@@ -400,7 +523,123 @@ function displayCountdownMessage() {
   timerMessage.innerText = `Time left: ${timerStartValue--}`;
 }
 
-document.addEventListener("keypress", function(e) {
+function normalModeEventListener(e) {
+  if (gameStarted) {
+    // prevent "wrong" guesses by converting entered key to lowercase
+    let enteredKey = e.key.toLowerCase();
+    if (livesLeft > 0) {
+      gameStarted = true;
+      if (secretWord.includes(enteredKey) && gameStarted) {
+        for (let i = 0; i < secretWord.length; i++) {
+          if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
+            // loops over secretWord, if value at indexes match then change underscore to corresponding letter
+            guess[i] = secretWord[i];
+            let word = guess.join("");
+
+            displayedGuess.innerText = word;
+          } else if (
+            secretWord[i] === enteredKey &&
+            guess[i].includes(enteredKey)
+          ) {
+            container.innerHTML = "";
+            console.log("you already guessed that");
+
+            const alreadyGuessedMessage = document.createElement("p");
+            alreadyGuessedMessage.innerText = "You already guessed that!";
+            container.appendChild(alreadyGuessedMessage);
+
+            setTimeout(function() {
+              if (alreadyGuessedMessage.parentNode === container) {
+                container.removeChild(alreadyGuessedMessage);
+                container.appendChild(displayedLives);
+                container.appendChild(displayedCoins);
+                container.appendChild(displayedGuess);
+                container.appendChild(hint);
+                if (audioHintButton.style.opacity === "1") {
+                  container.appendChild(audioHintButton);
+                }
+                container.appendChild(quitButton);
+              }
+            }, 300);
+          }
+          if (secretWord === guess.join("")) {
+            audio.pause();
+            // prevent repeat of words
+            rappers.splice(ranNum, 1);
+
+            gameStarted = false;
+            correctGuesses++;
+            coins += 5;
+
+            if (displayedLives.parentNode === container) {
+              container.removeChild(displayedLives);
+              container.removeChild(displayedCoins);
+              container.removeChild(displayedGuess);
+              container.removeChild(hint);
+              if (quitButton.parentNode === container) {
+                container.removeChild(quitButton);
+              }
+
+              displayCorrectGuessMessage();
+            }
+
+            if (audioHintButton.parentNode === container) {
+              container.removeChild(audioHintButton);
+            }
+
+            if (rappers.length > 0) {
+              newWord();
+            }
+          }
+        }
+      } else {
+        livesLeft--;
+        wrongAudio.play();
+        displayWrongGuessMessage();
+        makeLivesString();
+      }
+    }
+    if (rappers.length === 0) {
+      document.removeEventListener("keypress", normalModeEventListener);
+      gameStarted = false;
+      container.innerHTML = "";
+
+      winAudio.play();
+
+      const winMessage = document.createElement("p");
+      winMessage.classList.add("win-message");
+      winMessage.innerText = "You won!";
+      populateRappersArray();
+      container.appendChild(winMessage);
+      createRetryButton();
+      retryButton.addEventListener("click", function() {
+        winAudio.pause();
+      });
+    }
+    if (livesLeft === 0 && coins >= 10) {
+      container.innerText = "";
+      const buyBackMessage = document.createElement("p");
+      buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
+      container.appendChild(buyBackMessage);
+      const buyBackButton = document.createElement("button");
+      buyBackButton.classList.add("buy-back-button");
+      buyBackButton.innerText = "Buy life";
+      container.appendChild(buyBackButton);
+      container.appendChild(quitButton);
+      buyBackButton.addEventListener("click", buyBack);
+    }
+    if (livesLeft === 0 && coins < 10) {
+      document.removeEventListener("keypress", normalModeEventListener);
+      loseGame();
+    }
+  }
+}
+
+function normalMode() {
+  document.addEventListener("keypress", normalModeEventListener);
+}
+
+function speedModeEventListener(e) {
   if (gameStarted) {
     // prevent "wrong" guesses by converting entered key to lowercase
     let enteredKey = e.key.toLowerCase();
@@ -480,18 +719,7 @@ document.addEventListener("keypress", function(e) {
         timerStartValue = 1000;
         countdownTimer = setInterval(displayCountdownMessage, 10);
 
-        loseLifeTimer = setInterval(function() {
-          container.innerHTML = "";
-          livesLeft--;
-          clearInterval(countdownTimer);
-          timerStartValue = 1000;
-          countdownTimer = setInterval(displayCountdownMessage, 10);
-          makeLivesString();
-          refreshDisplayValues();
-          if (livesLeft === 0) {
-            loseGame();
-          }
-        }, 10000);
+        loseLife();
 
         livesLeft--;
         wrongAudio.play();
@@ -500,6 +728,7 @@ document.addEventListener("keypress", function(e) {
       }
     }
     if (rappers.length === 0) {
+      document.removeEventListener("keypress", speedModeEventListener);
       gameStarted = false;
       container.innerHTML = "";
 
@@ -533,9 +762,14 @@ document.addEventListener("keypress", function(e) {
       clearInterval(countdownTimer);
     }
     if (livesLeft === 0 && coins < 10) {
+      document.removeEventListener("keypress", speedModeEventListener);
       loseGame();
       clearInterval(loseLifeTimer);
       clearInterval(countdownTimer);
     }
   }
-});
+}
+
+function speedMode() {
+  document.addEventListener("keypress", speedModeEventListener);
+}
