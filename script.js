@@ -129,6 +129,7 @@ let speedModeButton;
 let modeChosen;
 let instructionsButton;
 let creatorMessage;
+let onlyForDesktopMessage;
 let displayedLives;
 let displayedCoins;
 let displayedGuess;
@@ -174,6 +175,11 @@ function startScreen() {
   creatorMessage.innerText = "Made with ❤ by Ben Jacob Lee";
   container.appendChild(creatorMessage);
 
+  onlyForDesktopMessage = document.createElement("p");
+  onlyForDesktopMessage.classList.add("only-for-desktop-message");
+  onlyForDesktopMessage.innerText = "Desktop only";
+  container.append(onlyForDesktopMessage);
+
   normalModeButton.addEventListener("click", startNormalMode);
   speedModeButton.addEventListener("click", startSpeedMode);
   instructionsButton.addEventListener("click", displayInstructions);
@@ -197,6 +203,7 @@ function startNormalMode() {
   container.removeChild(speedModeButton);
   container.removeChild(instructionsButton);
   container.removeChild(creatorMessage);
+  container.removeChild(onlyForDesktopMessage);
   gameStarted = true;
 
   if (gameStarted) {
@@ -215,6 +222,7 @@ function startSpeedMode() {
   container.removeChild(speedModeButton);
   container.removeChild(instructionsButton);
   container.removeChild(creatorMessage);
+  container.removeChild(onlyForDesktopMessage);
   gameStarted = true;
 
   if (gameStarted) {
@@ -808,7 +816,7 @@ function speedModeEventListener(e) {
         "https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif"
       );
       container.appendChild(winGif);
-      
+
       populateRappersArray();
       createRetryButton();
       retryButton.addEventListener("click", function() {

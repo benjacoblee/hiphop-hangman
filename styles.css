@@ -35,7 +35,11 @@ p {
 
 .author-message {
   font-size: 1rem;
-  margin-top: 100px;
+  margin-top: 50px;
+}
+
+.only-for-desktop-message {
+  font-size: 1rem;
 }
 
 .audio-hint-button {
@@ -109,6 +113,7 @@ h1,
 .speed-mode-button,
 .instructions-button,
 .author-message,
+.only-for-desktop-message,
 .win-message,
 .win-gif,
 .lose-message,
