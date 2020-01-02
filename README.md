@@ -5,7 +5,6 @@
 Hip-hop flavored Hangman game. Only for the realest.
 
 ### Rules 💸
-*** 
 Objective: to guess the rapper's name given a word hint.
 
 The user starts with 10 lives and 10 coins. 
@@ -23,15 +22,12 @@ If the user has 0 lives and less than 10 coins, the game ends.
 Now comes with timer! If there was no guess, user loses a life.
 
 ### Technologies Used
-
 HTML, CSS and Javascript.
 
 ### Methodology
-***
 I started by implementing the most basic version of the game - matching the user-entered string with a pre-existing string. Once this worked, I slowly introduced other elements: audio placeholders, CSS styling, buttons, display refreshes, etc.
 
 ### Motivations
-***
 Did not start clearly-defined motivations. However, motivation was quick to arise - as fixing the problem at hand almost always leads to another problem. If I had to say, here are some things I've learned:
 
 - interesting uses for string interpolation
