@@ -4,7 +4,7 @@
 
 Hip-hop flavored Hangman game. Only for the realest 👐🏼
 
-## Rules 💸💸💸
+## Rules 💸
 
 Objective: to guess the rapper's name given a word hint.
 
