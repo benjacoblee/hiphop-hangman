@@ -286,7 +286,6 @@ function newWord() {
     audioHintButton = document.createElement("button");
     audioHintButton.classList.add("audio-hint-button");
     audioHintButton.innerText = "Get audio hint";
-
     // setting opacity in stylesheet returns undefined value for some reason
     audioHintButton.style.opacity = "1";
 
@@ -298,16 +297,14 @@ function newWord() {
 
     quitButton.addEventListener("click", quitGame);
 
-    // to refresh displayed coin value
+    setTimeout(refreshDisplayValues, 200); // creates all onscreen elements
 
-    setTimeout(refreshDisplayValues, 200);
   } else if (modeChosen === "speed") {
     gameStarted = true;
     correctAudio.play();
 
     ranNum = Math.floor(Math.random() * rappers.length);
 
-    // use string interpolation to choose rapper from array and play corresponding audio
     audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
     audio.currentTime = 0;
 
@@ -317,10 +314,8 @@ function newWord() {
     secretWord = rappers[ranNum].rapper;
     secretWord = secretWord.toLowerCase();
 
-    // empties guess array in preparation for new word
     guess = [];
 
-    // populates guessArray with underscores to correspond to length of secret word
     for (let i = 0; i < secretWord.length; i++) {
       guess[i] = "_";
     }
@@ -345,8 +340,6 @@ function newWord() {
     audioHintButton = document.createElement("button");
     audioHintButton.classList.add("audio-hint-button");
     audioHintButton.innerText = "Get audio hint";
-
-    // setting opacity in stylesheet returns undefined value for some reason
     audioHintButton.style.opacity = "1";
 
     audioHintButton.addEventListener("click", getAudioHint);
@@ -357,15 +350,13 @@ function newWord() {
 
     quitButton.addEventListener("click", quitGame);
 
-    // to refresh displayed coin value
-
     setTimeout(refreshDisplayValues, 200);
 
     loseLife();
   }
 }
 
-function refreshDisplayValues() {
+function refreshDisplayValues() { 
   if (gameStarted) {
     if (displayedLives.parentNode === container) {
       container.removeChild(displayedLives);
@@ -561,11 +552,10 @@ function loseLife() {
 }
 
 function loseGame() {
-  debugger;
   container.innerHTML = "";
   gameStarted = false;
 
-  let playPromise = loseAudio.play();
+  loseAudio.play();
 
   const loseMessage = document.createElement("p");
   loseMessage.classList.add("lose-message");
@@ -614,7 +604,7 @@ function displayCountdownMessage() {
   timerMessage.innerText = `Time left: ${timerStartValue--}`;
 }
 
-function normalModeEventListener(e) {
+function normalModeEventListener(e) { // had to create event listeners to remove them, faced a problem where both event listeners were running at the same time
   if (gameStarted) {
     // prevent "wrong" guesses by converting entered key to lowercase
     let enteredKey = e.key.toLowerCase();
@@ -739,14 +729,12 @@ function normalMode() {
 
 function speedModeEventListener(e) {
   if (gameStarted) {
-    // prevent "wrong" guesses by converting entered key to lowercase
     let enteredKey = e.key.toLowerCase();
     if (livesLeft > 0) {
       gameStarted = true;
       if (secretWord.includes(enteredKey) && gameStarted) {
         for (let i = 0; i < secretWord.length; i++) {
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
-            // loops over secretWord, if value at indexes match then change underscore to corresponding letter
             guess[i] = secretWord[i];
             let word = guess.join("");
 
@@ -778,7 +766,7 @@ function speedModeEventListener(e) {
           }
           if (secretWord === guess.join("")) {
             audio.pause();
-            // prevent repeat of words
+
             rappers.splice(ranNum, 1);
 
             correctGuesses++;
