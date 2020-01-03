@@ -299,20 +299,6 @@ function newWord() {
     // setting opacity in stylesheet returns undefined value for some reason
     audioHintButton.style.opacity = "1";
 
-    function getAudioHint() {
-      audio.play();
-      coins -= 5;
-      displayedCoins.innerText = `Coins: ${coins}`;
-
-      // clear out container to refresh display values with new coin value
-      container.innerHTML = "";
-      refreshDisplayValues();
-      audioHintButton.classList.add("hint-button-fade-out");
-      audioHintButton.style.opacity = "0";
-
-      audioHintButton.removeEventListener("click", getAudioHint);
-    }
-
     audioHintButton.addEventListener("click", getAudioHint);
 
     quitButton = document.createElement("button");
@@ -372,20 +358,6 @@ function newWord() {
     // setting opacity in stylesheet returns undefined value for some reason
     audioHintButton.style.opacity = "1";
 
-    function getAudioHint() {
-      audio.play();
-      coins -= 5;
-      displayedCoins.innerText = `Coins: ${coins}`;
-
-      // clear out container to refresh display values with new coin value
-      container.innerHTML = "";
-      refreshDisplayValues();
-      audioHintButton.classList.add("hint-button-fade-out");
-      audioHintButton.style.opacity = "0";
-
-      audioHintButton.removeEventListener("click", getAudioHint);
-    }
-
     audioHintButton.addEventListener("click", getAudioHint);
 
     quitButton = document.createElement("button");
@@ -409,7 +381,6 @@ function refreshDisplayValues() {
     if (modeChosen === "speed") {
       container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
     }
-
     container.removeChild(displayedGuess);
     container.removeChild(hint);
     container.removeChild(audioHintButton);
@@ -527,6 +498,20 @@ function makeLivesString() {
   displayedLives.classList.add("displayed-lives");
   displayedLives.innerText = livesString;
   return displayedLives;
+}
+
+function getAudioHint() {
+  audio.play();
+  coins -= 5;
+  displayedCoins.innerText = `Coins: ${coins}`;
+
+  // clear out container to refresh display values with new coin value
+  container.innerHTML = "";
+  refreshDisplayValues();
+  audioHintButton.classList.add("hint-button-fade-out");
+  audioHintButton.style.opacity = "0";
+
+  audioHintButton.removeEventListener("click", getAudioHint);
 }
 
 function buyBack() {
