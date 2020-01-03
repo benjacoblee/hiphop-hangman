@@ -477,7 +477,7 @@ function displayWrongGuessMessage() {
     container.removeChild(quitButton);
   }
 
-  if (livesLeft !== 0) {
+  if (livesLeft > 0 && coins >= 10) {
     setTimeout(function() {
       if (wrongGuessMessage.parentNode === container) {
         container.appendChild(displayedLives);
@@ -496,6 +496,24 @@ function displayWrongGuessMessage() {
         container.appendChild(quitButton);
       }
     }, 500);
+  } else if (livesLeft === 0 && coins >= 10) {
+    container.innerText = "";
+    const buyBackMessage = document.createElement("p");
+    buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
+    container.appendChild(buyBackMessage);
+    const buyBackButton = document.createElement("button");
+    buyBackButton.classList.add("buy-back-button");
+    buyBackButton.innerText = "Buy life";
+    container.appendChild(buyBackButton);
+    container.appendChild(quitButton);
+    buyBackButton.addEventListener("click", buyBack);
+    clearInterval(loseLifeTimer);
+    clearInterval(countdownTimer);
+  } else if (livesLeft === 0 && coins < 10) {
+    clearInterval(loseLifeTimer);
+    clearInterval(countdownTimer);
+    document.removeEventListener("keydown", speedModeEventListener);
+    loseGame();
   }
 }
 
