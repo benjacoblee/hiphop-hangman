@@ -377,33 +377,35 @@ function newWord() {
 }
 
 function refreshDisplayValues() {
-  if (displayedLives.parentNode === container) {
-    container.removeChild(displayedLives);
-    container.removeChild(displayedCoins);
-    if (modeChosen === "speed") {
-      container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
+  if (gameStarted) {
+    if (displayedLives.parentNode === container) {
+      container.removeChild(displayedLives);
+      container.removeChild(displayedCoins);
+      if (modeChosen === "speed") {
+        container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
+      }
+      container.removeChild(displayedGuess);
+      container.removeChild(hint);
+      container.removeChild(audioHintButton);
     }
-    container.removeChild(displayedGuess);
-    container.removeChild(hint);
-    container.removeChild(audioHintButton);
+
+    container.appendChild(displayedLives);
+    container.appendChild(displayedCoins);
+
+    if (modeChosen === "speed") {
+      container.appendChild(timerMessage);
+    }
+
+    container.appendChild(displayedGuess);
+    container.appendChild(hint);
+
+    if (audioHintButton.style.opacity === "1") {
+      // means that audio hint button hasn't been clicked yet
+      container.appendChild(audioHintButton);
+    }
+
+    container.appendChild(quitButton);
   }
-
-  container.appendChild(displayedLives);
-  container.appendChild(displayedCoins);
-
-  if (modeChosen === "speed") {
-    container.appendChild(timerMessage);
-  }
-
-  container.appendChild(displayedGuess);
-  container.appendChild(hint);
-
-  if (audioHintButton.style.opacity === "1") {
-    // means that audio hint button hasn't been clicked yet
-    container.appendChild(audioHintButton);
-  }
-
-  container.appendChild(quitButton);
 }
 
 function displayCorrectGuessMessage() {
@@ -470,7 +472,7 @@ function displayWrongGuessMessage() {
       }
     }, 500);
   } else if (livesLeft === 0 && coins >= 10) {
-    container.innerText = "";
+    container.innerHTML = "";
     const buyBackMessage = document.createElement("p");
     buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
     container.appendChild(buyBackMessage);
@@ -570,11 +572,12 @@ function loseLife() {
 }
 
 function loseGame() {
+  debugger;
+  container.innerHTML = "";
   gameStarted = false;
 
   let playPromise = loseAudio.play();
 
-  container.innerText = "";
   const loseMessage = document.createElement("p");
   loseMessage.classList.add("lose-message");
   loseMessage.innerText = `You lose!
