@@ -25,6 +25,7 @@ Did not start clearly-defined motivations. However, motivation was quick to aris
 - interesting uses for string interpolation
 - learning how to play/pause audio with Javascript
 - some CSS animation
+- DOM manipulation methods
 - slight approximation of the order in which code is run
 - some use cases for setInterval and setTimeout
 
