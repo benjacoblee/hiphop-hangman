@@ -197,6 +197,7 @@ function cancelScreen() {
 
 function startNormalMode() {
   modeChosen = "normal"; // so that when newWord() runs, it creates elements for the respective mode
+  correctGuesses = 0;
   container.removeChild(gameTitle);
   container.removeChild(normalModeButton);
   container.removeChild(speedModeButton);
@@ -216,6 +217,7 @@ function startNormalMode() {
 
 function startSpeedMode() {
   modeChosen = "speed";
+  correctGuesses = 0;
   container.removeChild(gameTitle);
   container.removeChild(normalModeButton);
   container.removeChild(speedModeButton);
@@ -704,7 +706,7 @@ function normalModeEventListener(e) {
 
       const winMessage = document.createElement("p");
       winMessage.classList.add("win-message");
-      winMessage.innerText = "You won!";
+      winMessage.innerText = `You won! Correct guesses: ${correctGuesses}`;
       container.appendChild(winMessage);
 
       const winGif = document.createElement("img");
@@ -840,7 +842,7 @@ function speedModeEventListener(e) {
 
       const winMessage = document.createElement("p");
       winMessage.classList.add("win-message");
-      winMessage.innerText = "You won!";
+      winMessage.innerText = `You won! Correct guesses: ${correctGuesses}`;
       container.appendChild(winMessage);
 
       const winGif = document.createElement("img");
