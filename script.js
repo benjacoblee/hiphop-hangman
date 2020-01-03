@@ -179,8 +179,14 @@ function startScreen() {
   onlyForDesktopMessage.innerText = "Desktop only";
   container.append(onlyForDesktopMessage);
 
-  normalModeButton.addEventListener("click", startNormalMode);
-  speedModeButton.addEventListener("click", startSpeedMode);
+  normalModeButton.addEventListener("click", function() {
+    modeChosen = "normal";
+    start();
+  });
+  speedModeButton.addEventListener("click", function() {
+    modeChosen = "speed";
+    start();
+  });
   instructionsButton.addEventListener("click", displayInstructions);
 }
 
@@ -195,8 +201,7 @@ function cancelScreen() {
   wrongAudio.play();
 }
 
-function startNormalMode() {
-  modeChosen = "normal"; // so that when newWord() runs, it creates elements for the respective mode
+function start() {
   correctGuesses = 0;
   container.removeChild(gameTitle);
   container.removeChild(normalModeButton);
@@ -209,27 +214,11 @@ function startNormalMode() {
   if (gameStarted) {
     populateRappersArray();
     displayCorrectGuessMessage();
-    normalMode();
-    newWord();
-    correctAudio.play();
-  }
-}
-
-function startSpeedMode() {
-  modeChosen = "speed";
-  correctGuesses = 0;
-  container.removeChild(gameTitle);
-  container.removeChild(normalModeButton);
-  container.removeChild(speedModeButton);
-  container.removeChild(instructionsButton);
-  container.removeChild(creatorMessage);
-  container.removeChild(onlyForDesktopMessage);
-  gameStarted = true;
-
-  if (gameStarted) {
-    populateRappersArray();
-    displayCorrectGuessMessage();
-    speedMode();
+    if (modeChosen === "normal") {
+      normalMode();
+    } else if (modeChosen === "speed") {
+      speedMode();
+    }
     newWord();
     correctAudio.play();
   }
@@ -668,7 +657,6 @@ function normalModeEventListener(e) {
             // prevent repeat of words
             rappers.splice(ranNum, 1);
 
-            gameStarted = false;
             correctGuesses++;
             coins += 5;
 
@@ -793,7 +781,6 @@ function speedModeEventListener(e) {
             // prevent repeat of words
             rappers.splice(ranNum, 1);
 
-            gameStarted = false;
             correctGuesses++;
             coins += 5;
 
