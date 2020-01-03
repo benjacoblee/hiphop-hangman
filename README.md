@@ -20,7 +20,7 @@ HTML, CSS and Javascript.
 I started by implementing the most basic version of the game - matching the user-entered string with a pre-existing string. Once this worked, I slowly introduced other elements: audio placeholders, CSS styling, buttons, display refreshes, etc.
 
 ### Motivations
-Did not start clearly-defined motivations. However, motivation was quick to arise - as fixing the problem at hand almost always leads to another problem. If I had to say, here are some things I've learned:
+Did not start clearly-defined motivations. However, motivation was quick to arise - as fixing the problem at hand almost always led to another problem. If I had to say, here are some things I've learned:
 
 - interesting uses for string interpolation
 - learning how to play/pause audio with Javascript
