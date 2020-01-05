@@ -304,33 +304,35 @@ function newWord() {
 }
 
 function refreshDisplayValues() {
-  if (displayedLives.parentNode === container) {
-    container.removeChild(displayedLives);
-    container.removeChild(displayedCoins);
-    if (modeChosen === "speed") {
-      container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
+  if (gameStarted) {
+    if (displayedLives.parentNode === container) {
+      container.removeChild(displayedLives);
+      container.removeChild(displayedCoins);
+      if (modeChosen === "speed") {
+        container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
+      }
+      container.removeChild(displayedGuess);
+      container.removeChild(hint);
+      container.removeChild(audioHintButton);
     }
-    container.removeChild(displayedGuess);
-    container.removeChild(hint);
-    container.removeChild(audioHintButton);
+
+    container.appendChild(displayedLives);
+    container.appendChild(displayedCoins);
+
+    if (modeChosen === "speed") {
+      container.appendChild(timerMessage);
+    }
+
+    container.appendChild(displayedGuess);
+    container.appendChild(hint);
+
+    if (audioHintButton.style.opacity === "1") {
+      // means that audio hint button hasn't been clicked yet
+      container.appendChild(audioHintButton);
+    }
+
+    container.appendChild(quitButton);
   }
-
-  container.appendChild(displayedLives);
-  container.appendChild(displayedCoins);
-
-  if (modeChosen === "speed") {
-    container.appendChild(timerMessage);
-  }
-
-  container.appendChild(displayedGuess);
-  container.appendChild(hint);
-
-  if (audioHintButton.style.opacity === "1") {
-    // means that audio hint button hasn't been clicked yet
-    container.appendChild(audioHintButton);
-  }
-
-  container.appendChild(quitButton);
 }
 
 function displayYeah() {
