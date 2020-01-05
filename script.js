@@ -298,7 +298,6 @@ function newWord() {
     quitButton.addEventListener("click", quitGame);
 
     setTimeout(refreshDisplayValues, 200); // creates all onscreen elements
-
   } else if (modeChosen === "speed") {
     gameStarted = true;
     correctAudio.play();
@@ -352,11 +351,11 @@ function newWord() {
 
     setTimeout(refreshDisplayValues, 200);
 
-    loseLife();
+    startLoseLifeTimer();
   }
 }
 
-function refreshDisplayValues() { 
+function refreshDisplayValues() {
   if (gameStarted) {
     if (displayedLives.parentNode === container) {
       container.removeChild(displayedLives);
@@ -452,6 +451,7 @@ function displayWrongGuessMessage() {
       }
     }, 500);
   } else if (livesLeft === 0 && coins >= 10) {
+    gameStarted = false;
     container.innerHTML = "";
     const buyBackMessage = document.createElement("p");
     buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
@@ -520,7 +520,7 @@ function createRetryButton() {
   });
 }
 
-function loseLife() {
+function startLoseLifeTimer() {
   loseLifeTimer = setInterval(function() {
     container.innerHTML = "";
     livesLeft--;
@@ -530,7 +530,7 @@ function loseLife() {
     makeLivesString();
     refreshDisplayValues();
     if (livesLeft === 0 && coins >= 10) {
-      container.innerText = "";
+      container.innerHTML = "";
       const buyBackMessage = document.createElement("p");
       buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
       container.appendChild(buyBackMessage);
@@ -604,7 +604,8 @@ function displayCountdownMessage() {
   timerMessage.innerText = `Time left: ${timerStartValue--}`;
 }
 
-function normalModeEventListener(e) { // had to create event listeners to remove them, faced a problem where both event listeners were running at the same time
+function normalModeEventListener(e) {
+  // had to create event listeners to remove them, faced a problem where both event listeners were running at the same time
   if (gameStarted) {
     // prevent "wrong" guesses by converting entered key to lowercase
     let enteredKey = e.key.toLowerCase();
@@ -704,22 +705,6 @@ function normalModeEventListener(e) { // had to create event listeners to remove
         winAudio.pause();
       });
     }
-    if (livesLeft === 0 && coins >= 10) {
-      container.innerText = "";
-      const buyBackMessage = document.createElement("p");
-      buyBackMessage.innerText = `You have ${coins} coins. Would you like to buy a life for 10 coins?`;
-      container.appendChild(buyBackMessage);
-      const buyBackButton = document.createElement("button");
-      buyBackButton.classList.add("buy-back-button");
-      buyBackButton.innerText = "Buy life";
-      container.appendChild(buyBackButton);
-      container.appendChild(quitButton);
-      buyBackButton.addEventListener("click", buyBack);
-    }
-    if (livesLeft === 0 && coins < 10) {
-      document.removeEventListener("keydown", normalModeEventListener);
-      loseGame();
-    }
   }
 }
 
@@ -803,9 +788,9 @@ function speedModeEventListener(e) {
         timerStartValue = 1000;
         countdownTimer = setInterval(displayCountdownMessage, 10);
 
-        loseLife();
-
         livesLeft--;
+        startLoseLifeTimer();
+
         wrongAudio.play();
         displayWrongGuessMessage();
         makeLivesString();
