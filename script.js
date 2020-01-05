@@ -215,9 +215,9 @@ function start() {
     populateRappersArray();
     displayCorrectGuessMessage();
     if (modeChosen === "normal") {
-      normalMode();
+      document.addEventListener("keydown", normalModeEventListener);
     } else if (modeChosen === "speed") {
-      speedMode();
+      document.addEventListener("keydown", speedModeEventListener);
     }
     newWord();
     correctAudio.play();
@@ -706,10 +706,6 @@ function normalModeEventListener(e) {
       });
     }
   }
-}
-
-function normalMode() {
-  document.addEventListener("keydown", normalModeEventListener);
 }
 
 function speedModeEventListener(e) {
