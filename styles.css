@@ -20,6 +20,17 @@ p {
   font-size: 3rem;
 }
 
+a {
+  color: white;
+  text-decoration: underline;
+}
+
+a:hover {
+  transition: 2s;
+  color: red;
+  font-size: 1.2rem;
+}
+
 .container {
   display: flex;
   flex-direction: column;
