@@ -23,8 +23,6 @@ function askIfReal() {
   });
 }
 
-let rappers = [];
-
 function populateRappersArray() {
   rappers = [
     {
@@ -113,6 +111,7 @@ let ranNum;
 let secretWord;
 let audio;
 let hint;
+let rappers = [];
 let guess = [];
 let coins = 10; // 10 coins to buy back 1 life
 let livesLeft = 10;
@@ -305,35 +304,33 @@ function newWord() {
 }
 
 function refreshDisplayValues() {
-  if (gameStarted) {
-    if (displayedLives.parentNode === container) {
-      container.removeChild(displayedLives);
-      container.removeChild(displayedCoins);
-      if (modeChosen === "speed") {
-        container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
-      }
-      container.removeChild(displayedGuess);
-      container.removeChild(hint);
-      container.removeChild(audioHintButton);
-    }
-
-    container.appendChild(displayedLives);
-    container.appendChild(displayedCoins);
-
+  if (displayedLives.parentNode === container) {
+    container.removeChild(displayedLives);
+    container.removeChild(displayedCoins);
     if (modeChosen === "speed") {
-      container.appendChild(timerMessage);
+      container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
     }
-
-    container.appendChild(displayedGuess);
-    container.appendChild(hint);
-
-    if (audioHintButton.style.opacity === "1") {
-      // means that audio hint button hasn't been clicked yet
-      container.appendChild(audioHintButton);
-    }
-
-    container.appendChild(quitButton);
+    container.removeChild(displayedGuess);
+    container.removeChild(hint);
+    container.removeChild(audioHintButton);
   }
+
+  container.appendChild(displayedLives);
+  container.appendChild(displayedCoins);
+
+  if (modeChosen === "speed") {
+    container.appendChild(timerMessage);
+  }
+
+  container.appendChild(displayedGuess);
+  container.appendChild(hint);
+
+  if (audioHintButton.style.opacity === "1") {
+    // means that audio hint button hasn't been clicked yet
+    container.appendChild(audioHintButton);
+  }
+
+  container.appendChild(quitButton);
 }
 
 function displayYeah() {
@@ -346,60 +343,6 @@ function displayYeah() {
       container.removeChild(correctGuessMessage);
     }
   }, 200);
-}
-
-function displayWrongGuessMessage() {
-  container.innerHTML = "";
-
-  wrongGuessMessage = document.createElement("p");
-  wrongGuessMessage.classList.add("wrong-guess-message");
-  wrongGuessMessage.innerText = `WRONG
-                                Lives left: ${livesLeft}
-                                `;
-
-  container.appendChild(wrongGuessMessage);
-
-  // to prevent errors where parent el doesn't exist yet
-  if (displayedLives.parentNode === container) {
-    container.removeChild(displayedLives);
-    container.removeChild(displayedCoins);
-    container.removeChild(displayedGuess);
-    container.removeChild(hint);
-
-    if (modeChosen === "speed") {
-      container.removeChild(timerMessage);
-    }
-
-    if (
-      audioHintButton.style.opacity === "1" ||
-      audioHintButton.style.opacity === "0"
-    ) {
-      if (audioHintButton.parentNode === container) {
-        container.removeChild(audioHintButton);
-      }
-    }
-
-    container.removeChild(quitButton);
-  }
-
-  setTimeout(function() {
-    if (wrongGuessMessage.parentNode === container) {
-      container.appendChild(displayedLives);
-      container.appendChild(displayedCoins);
-
-      if (modeChosen === "speed") {
-        container.appendChild(timerMessage);
-      }
-
-      container.removeChild(wrongGuessMessage);
-      container.appendChild(displayedGuess);
-      container.appendChild(hint);
-      if (audioHintButton.style.opacity === "1") {
-        container.appendChild(audioHintButton);
-      }
-      container.appendChild(quitButton);
-    }
-  }, 500);
 }
 
 function makeLivesString() {
@@ -429,8 +372,6 @@ function getAudioHint() {
 }
 
 function buyBack() {
-  clearInterval(loseLifeTimer);
-  clearInterval(countdownTimer);
   gameStarted = false;
   container.innerHTML = "";
   const buyBackMessage = document.createElement("p");
@@ -446,7 +387,6 @@ function buyBack() {
     coins -= 10;
     livesLeft++;
     if (modeChosen === "speed") {
-      console.log("speed mode");
       clearInterval(loseLifeTimer);
       clearInterval(countdownTimer);
       newWord();
@@ -471,21 +411,18 @@ function createRetryButton() {
   });
 }
 
-function startTimers(e) {
+function startTimers() {
   loseLifeTimer = setInterval(function() {
     container.innerHTML = "";
     clearInterval(countdownTimer);
     timerStartValue = 1000;
     countdownTimer = setInterval(displayCountdownMessage, 10);
+
+    livesLeft--;
     makeLivesString();
+    refreshTimers();
     refreshDisplayValues();
-    if (!e) {
-      container.innerHTML = "";
-      livesLeft--;
-      makeLivesString();
-      refreshTimers();
-      refreshDisplayValues();
-    }
+
     if (livesLeft === 0 && coins >= 10) {
       buyBack();
       clearInterval(countdownTimer);
@@ -503,6 +440,40 @@ function refreshTimers() {
   clearInterval(loseLifeTimer);
   clearInterval(countdownTimer);
   startTimers();
+}
+
+function winGame() {
+  if (modeChosen === "normal") {
+    document.removeEventListener("keydown", normalModeEventListener);
+  } else {
+    clearInterval(loseLifeTimer);
+    clearInterval(countdownTimer);
+    document.removeEventListener("keydown", speedModeEventListener);
+  }
+
+  gameStarted = false;
+  container.innerHTML = "";
+
+  winAudio.play();
+
+  const winMessage = document.createElement("p");
+  winMessage.classList.add("win-message");
+  winMessage.innerText = `You won! Correct guesses: ${correctGuesses}`;
+  container.appendChild(winMessage);
+
+  const winGif = document.createElement("img");
+  winGif.classList.add("win-gif");
+  winGif.setAttribute(
+    "src",
+    "https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif"
+  );
+  container.appendChild(winGif);
+
+  populateRappersArray();
+  createRetryButton();
+  retryButton.addEventListener("click", function() {
+    winAudio.pause();
+  });
 }
 
 function loseGame() {
@@ -618,38 +589,58 @@ function correctGuess() {
   }
 }
 
-function displayWin() {
-  if (modeChosen === "normal") {
-    document.removeEventListener("keydown", normalModeEventListener);
-  } else {
-    clearInterval(loseLifeTimer);
-    clearInterval(countdownTimer);
-    document.removeEventListener("keydown", speedModeEventListener);
-  }
-
-  gameStarted = false;
+function displayWrongGuessMessage() {
   container.innerHTML = "";
 
-  winAudio.play();
+  wrongGuessMessage = document.createElement("p");
+  wrongGuessMessage.classList.add("wrong-guess-message");
+  wrongGuessMessage.innerText = `WRONG
+                                Lives left: ${livesLeft}
+                                `;
 
-  const winMessage = document.createElement("p");
-  winMessage.classList.add("win-message");
-  winMessage.innerText = `You won! Correct guesses: ${correctGuesses}`;
-  container.appendChild(winMessage);
+  container.appendChild(wrongGuessMessage);
 
-  const winGif = document.createElement("img");
-  winGif.classList.add("win-gif");
-  winGif.setAttribute(
-    "src",
-    "https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif"
-  );
-  container.appendChild(winGif);
+  // to prevent errors where parent el doesn't exist yet
+  if (displayedLives.parentNode === container) {
+    container.removeChild(displayedLives);
+    container.removeChild(displayedCoins);
+    container.removeChild(displayedGuess);
+    container.removeChild(hint);
 
-  populateRappersArray();
-  createRetryButton();
-  retryButton.addEventListener("click", function() {
-    winAudio.pause();
-  });
+    if (modeChosen === "speed") {
+      container.removeChild(timerMessage);
+    }
+
+    if (
+      audioHintButton.style.opacity === "1" ||
+      audioHintButton.style.opacity === "0"
+    ) {
+      if (audioHintButton.parentNode === container) {
+        container.removeChild(audioHintButton);
+      }
+    }
+
+    container.removeChild(quitButton);
+  }
+
+  setTimeout(function() {
+    if (wrongGuessMessage.parentNode === container) {
+      container.appendChild(displayedLives);
+      container.appendChild(displayedCoins);
+
+      if (modeChosen === "speed") {
+        container.appendChild(timerMessage);
+      }
+
+      container.removeChild(wrongGuessMessage);
+      container.appendChild(displayedGuess);
+      container.appendChild(hint);
+      if (audioHintButton.style.opacity === "1") {
+        container.appendChild(audioHintButton);
+      }
+      container.appendChild(quitButton);
+    }
+  }, 500);
 }
 
 function normalModeEventListener(e) {
@@ -684,13 +675,13 @@ function normalModeEventListener(e) {
         makeLivesString();
       }
     }
-    if (livesLeft === 0 && coins >= 0) {
+    if (livesLeft === 0 && coins >= 10) {
       buyBack();
     } else if (livesLeft === 0 && coins < 10) {
       loseGame();
     }
     if (rappers.length === 0) {
-      displayWin();
+      winGame();
     }
   }
 }
@@ -718,7 +709,6 @@ function speedModeEventListener(e) {
           }
         }
       } else {
-        console.log("in else block");
         container.innerHTML = "";
         livesLeft--;
         wrongAudio.play();
@@ -728,15 +718,13 @@ function speedModeEventListener(e) {
       }
     }
     if (livesLeft === 0 && coins >= 10) {
-      console.log("can buy back");
       buyBack();
-      debugger;
     } else if (livesLeft === 0 && coins < 10) {
       loseGame();
     }
   }
 
   if (rappers.length === 0) {
-    displayWin();
+    winGame();
   }
 }
