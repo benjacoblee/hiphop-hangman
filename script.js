@@ -171,7 +171,7 @@ function startScreen() {
 
   creatorMessage = document.createElement("p");
   creatorMessage.classList.add("author-message");
-  creatorMessage.innerText = "Made with ❤ by Ben Jacob Lee";
+  creatorMessage.innerHTML = `Made with ❤ by <a href="https://github.com/benjacoblee/">Ben Jacob Lee</a>`;
   container.appendChild(creatorMessage);
 
   onlyForDesktopMessage = document.createElement("p");
