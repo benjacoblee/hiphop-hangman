@@ -12,7 +12,7 @@ function askIfReal() {
   }).then(function(result) {
     if (result.value) {
       correctAudio.play();
-      setTimeout(startScreen, 200);
+      setTimeout(startScreen, 200); // create start screen
     } else if (result.dismiss) {
       setTimeout(cancelScreen, 200);
       setTimeout(function() {
@@ -27,19 +27,20 @@ function populateRappersArray() {
   rappers = [
     {
       rapper: "snoop",
-      hint: "formerly known as _____ Lion"
+      hint: `formerly known as _____ Lion. 
+      Charlie Brown's pet`
     },
     {
       rapper: "biggie",
-      hint: "opposite of small"
+      hint: "opposite of small, notorious"
     },
     {
       rapper: "tupac",
-      hint: "more than one pack"
+      hint: "more than one pac. biggie's biggest rival"
     },
     {
       rapper: "eminem",
-      hint: "also the name of a popular chocolate brand"
+      hint: "8 mile. also a popular brand of chocolate. mum's spaghetti"
     },
     {
       rapper: "50 cent",
@@ -47,32 +48,28 @@ function populateRappersArray() {
     },
     {
       rapper: "kendrick",
-      hint: "don't kill my vibe"
+      hint: `don't kill my vibe. to pimp a butterfly. sit down, be humble`
     },
     {
       rapper: "outkast",
-      hint: "another word for pariahs"
+      hint: "another word for pariahs, people who are shunned"
     },
     { rapper: "jay z", hint: "yonce's husband" },
     { rapper: "ice cube", hint: "something you might put in soda" },
     { rapper: "dre", hint: "not a real doctor" },
-    { rapper: "drake", hint: "an obsolete word for dragon" },
+    { rapper: "drake", hint: "an obsolete word for dragon. from canada" },
     {
       rapper: "DMX",
       hint: "rapper known for iconic song in deadpool soundtrack"
     },
-    { rapper: "kanye", hint: "YEEZUS" },
+    { rapper: "kanye", hint: `<u>YE</u>EZUS` },
     {
       rapper: "chamillionaire",
       hint: "only really famous for that one song"
     },
     {
-      rapper: "chingy",
-      hint: "also rapper of one call away"
-    },
-    {
       rapper: "bow wow",
-      hint: "dog sounds"
+      hint: `dog sounds. used to be "lil ___ ___"`
     },
     {
       rapper: "j. cole",
@@ -80,30 +77,40 @@ function populateRappersArray() {
     },
     {
       rapper: "eazy e",
-      hint: "founding member of nwa"
+      hint: "founding member of nwa, the opposite of difficult"
     },
-    { rapper: "rakim", hint: "eric b and" },
+
     { rapper: "childish gambino", hint: "synonymous with immature" },
     { rapper: "logic", hint: "something you need for reasoning" },
-    { rapper: "ll cool j", hint: "ladies love cool james" },
-    { rapper: "mos def", hint: "indisputably, unequivocally" },
+    {
+      rapper: "ll cool j",
+      hint: "<u>l</u>adies <u>l</u>ove cool <u>j</u>ames"
+    },
+    { rapper: "mos def", hint: "without doubt, certain. indisputable" },
     { rapper: "ludacris", hint: "ridiculous" },
-    { rapper: "t.i.", hint: "two meaningless letters" },
     { rapper: "mac miller", hint: "recently od'ed. rip" },
-    { rapper: "nelly", hint: "Cornell Haynes" },
+    { rapper: "nelly", hint: "Cor<u>nell</u> Haynes. rhymes with kelly" },
     {
       rapper: "xzibit",
-      hint: "an organised presentation and display of a selection of items"
+      hint:
+        "an organised presentation and display of a selection of items. an art ___ (not gallery)"
     },
-    { rapper: "will smith", hint: "more well-known as an actor. fresh prince" },
-    { rapper: "b.o.b", hint: "a very common name" },
+    {
+      rapper: "will smith",
+      hint: "more well-known as an actor. fresh prince of bel air"
+    },
+    { rapper: "b.o.b", hint: "a very common name. _._._ the builder" },
     {
       rapper: "post malone",
       hint: `attained recognition after "white iverson"`
     },
     { rapper: "cardi b", hint: "sounds like bacardi, cardio" },
     { rapper: "nicki minaj", hint: "female, wears colorful wigs" },
-    { rapper: "chance", hint: "a probabilty of something happening" }
+    { rapper: "chance", hint: "the probabilty of something happening" },
+    {
+      rapper: "dj khaled",
+      hint: `"you smart. you loyal. i appreciate that." doesn't actually rap much. memelord of hip-hop`
+    }
   ];
 }
 
@@ -113,9 +120,11 @@ let audio;
 let hint;
 let rappers = [];
 let guess = [];
+let wronglyGuessedLetters = [];
 let coins = 10; // 10 coins to buy back 1 life
 let livesLeft = 10;
 let correctGuesses = 0;
+let cheatCounter = 0;
 let gameStarted = false; // I THINK this was to prevent errors where game hadn't started and event listener was firing
 let livesString;
 
@@ -132,7 +141,13 @@ let onlyForDesktopMessage;
 let displayedLives;
 let displayedCoins;
 let displayedGuess;
+let displayWronglyGuessedLetters;
 let audioHintButton;
+let pauseButton;
+let pauseScreen;
+let pauseMessage;
+let pausedLoseLifeValue;
+let pausedCountdownTimerValue;
 let retryButton;
 let quitButton;
 let loseLifeTimer;
@@ -151,7 +166,7 @@ function startScreen() {
   document.body.appendChild(container);
 
   gameTitle = document.createElement("h1");
-  gameTitle.innerText = "Hip-Hop Hangman";
+  gameTitle.innerText = `Hip-Hop Hangman`;
   container.appendChild(gameTitle);
 
   normalModeButton = document.createElement("button");
@@ -170,8 +185,8 @@ function startScreen() {
   container.appendChild(instructionsButton);
 
   creatorMessage = document.createElement("p");
-  creatorMessage.classList.add("author-message");
-  creatorMessage.innerHTML = `Made with ❤ by <a href="https://github.com/benjacoblee/">Ben Jacob Lee</a>`;
+  creatorMessage.classList.add("creator-message");
+  creatorMessage.innerHTML = `Made with <span class="heart">❤</span> by <a href="https://github.com/benjacoblee/">Ben Jacob Lee</a>`;
   container.appendChild(creatorMessage);
 
   onlyForDesktopMessage = document.createElement("p");
@@ -180,18 +195,27 @@ function startScreen() {
   container.append(onlyForDesktopMessage);
 
   normalModeButton.addEventListener("click", function() {
-    modeChosen = "normal";
-    startGame();
+    modeChosen = "normal"; // set mode chosen in order to append the proper elements; speed mode will not have timer message
+    startGame(); // also to add the correct event listeners
   });
   speedModeButton.addEventListener("click", function() {
     modeChosen = "speed";
     startGame();
   });
-  instructionsButton.addEventListener("click", displayInstructions);
+  instructionsButton.addEventListener("click", function() {
+    displayInstructions();
+    instructionsToggleBlur();
+  });
+
+  const heart = document.querySelector(".heart");
+  heart.addEventListener("click", function() {
+    modeChosen = "cheat";
+    startGame();
+  });
 }
 
 function cancelScreen() {
-  const container = document.createElement("div");
+  container = document.createElement("div");
   container.classList.add("container");
   document.body.appendChild(container);
   const cancelMessage = document.createElement("p");
@@ -211,14 +235,23 @@ function startGame() {
   container.removeChild(onlyForDesktopMessage);
   gameStarted = true;
 
+  const yeahMessage = document.createElement("p");
+  yeahMessage.classList.add("correct-guess-message");
+  yeahMessage.innerText = "yeah";
+  container.appendChild(yeahMessage);
+  setTimeout(function() {
+    container.removeChild(yeahMessage);
+  }, 200);
+
   if (gameStarted) {
     populateRappersArray();
-    displayYeah();
     if (modeChosen === "normal") {
       document.addEventListener("keydown", normalModeEventListener);
     } else if (modeChosen === "speed") {
       document.addEventListener("keydown", speedModeEventListener);
       startTimers();
+    } else if (modeChosen === "cheat") {
+      document.addEventListener("keydown", cheatModeEventListener);
     }
     newWord();
     correctAudio.play();
@@ -226,7 +259,6 @@ function startGame() {
 }
 
 function displayInstructions() {
-  container.innerHTML = "";
   const instructionsPara = document.createElement("p");
   instructionsPara.classList.add("instructions-para");
   instructionsPara.innerText = `Welcome to Hip-Hop Hangman!
@@ -234,7 +266,8 @@ function displayInstructions() {
     You are allowed a total of 10 wrong guesses - after which, you lose (unless you have enough coins)!
     Spend 5 coins to get an audio hint!
     Spend 10 coins to get a life!
-    Enter your choice by simply typing on the keyboard.
+    Enter your choice by simply typing on the keyboard 
+    (words may consist of numbers, periods or spaces)!
     Have fun and keep it a hunnit 👐`;
   container.appendChild(instructionsPara);
   const backButton = document.createElement("button");
@@ -244,8 +277,18 @@ function displayInstructions() {
 
   backButton.addEventListener("click", function() {
     document.body.innerHTML = "";
+    instructionsToggleBlur();
     startScreen();
   });
+}
+
+function instructionsToggleBlur() {
+  gameTitle.classList.toggle("blur");
+  normalModeButton.classList.toggle("blur");
+  speedModeButton.classList.toggle("blur");
+  instructionsButton.classList.toggle("blur");
+  creatorMessage.classList.toggle("blur");
+  onlyForDesktopMessage.classList.toggle("blur");
 }
 
 function newWord() {
@@ -259,29 +302,40 @@ function newWord() {
   audio.currentTime = 0;
 
   hint = document.createElement("p");
-  hint.innerText = rappers[ranNum].hint;
+  hint.classList.add("hint");
+  hint.innerHTML = rappers[ranNum].hint;
 
   secretWord = rappers[ranNum].rapper;
   secretWord = secretWord.toLowerCase();
 
   // empties guess array in preparation for new word
   guess = [];
+  wronglyGuessedLetters = [];
 
   // populates guessArray with underscores to correspond to length of secret word
   for (let i = 0; i < secretWord.length; i++) {
     guess[i] = "_";
   }
 
+  createDisplayValues();
+
+  setTimeout(refreshDisplayValues, 400); // creates all onscreen elements
+}
+
+function createDisplayValues() {
   displayedGuess = document.createElement("p");
-  displayedGuess.classList.add("displayedGuess");
-  displayedGuess.innerText = guess.join("");
   displayedGuess.classList.add("displayed-guess");
+  displayedGuess.innerText = guess.join("");
 
   makeLivesString();
 
   displayedCoins = document.createElement("p");
   displayedCoins.classList.add("displayed-coins");
   displayedCoins.innerText = `Coins: ${coins}`;
+
+  displayWronglyGuessedLetters = document.createElement("p");
+  displayWronglyGuessedLetters.classList.add("display-wrongly-guessed-letters");
+  displayWronglyGuessedLetters.innerText = "";
 
   audioHintButton = document.createElement("button");
   audioHintButton.classList.add("audio-hint-button");
@@ -291,13 +345,16 @@ function newWord() {
 
   audioHintButton.addEventListener("click", getAudioHint);
 
+  pauseButton = document.createElement("button");
+  pauseButton.classList.add("pause-button");
+  pauseButton.innerText = "pause";
+  pauseButton.addEventListener("click", pauseGame);
+
   quitButton = document.createElement("button");
   quitButton.classList.add("quit-button");
   quitButton.innerText = "Quit";
 
   quitButton.addEventListener("click", quitGame);
-
-  setTimeout(refreshDisplayValues, 200); // creates all onscreen elements
 
   timerMessage = document.createElement("p");
   timerMessage.classList.add("timer-message");
@@ -305,14 +362,17 @@ function newWord() {
 
 function refreshDisplayValues() {
   if (gameStarted) {
+    // NECESSARY IF NOT DISPLAYED ELEMENTS WILL GLITCH
     if (displayedLives.parentNode === container) {
       container.removeChild(displayedLives);
       container.removeChild(displayedCoins);
+
       if (modeChosen === "speed") {
         container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
       }
       container.removeChild(displayedGuess);
       container.removeChild(hint);
+      container.removeChild(displayWronglyGuessedLetters);
       container.removeChild(audioHintButton);
     }
 
@@ -325,26 +385,31 @@ function refreshDisplayValues() {
 
     container.appendChild(displayedGuess);
     container.appendChild(hint);
+    container.appendChild(displayWronglyGuessedLetters);
 
     if (audioHintButton.style.opacity === "1") {
       // means that audio hint button hasn't been clicked yet
       container.appendChild(audioHintButton);
     }
 
+    if (modeChosen === "speed") {
+      container.appendChild(pauseButton);
+    }
+
     container.appendChild(quitButton);
   }
 }
 
-function displayYeah() {
+function displayCorrectGuess() {
   const correctGuessMessage = document.createElement("p");
   correctGuessMessage.classList.add("correct-guess-message");
-  correctGuessMessage.innerText = "YEAH";
+  correctGuessMessage.innerText = secretWord;
   container.appendChild(correctGuessMessage);
   setTimeout(function() {
     if (correctGuessMessage.parentNode === container) {
       container.removeChild(correctGuessMessage);
     }
-  }, 200);
+  }, 300);
 }
 
 function makeLivesString() {
@@ -373,7 +438,85 @@ function getAudioHint() {
   audioHintButton.removeEventListener("click", getAudioHint); // could click on audio hint multiple times resulting in negative coin values
 }
 
+function pauseGame() {
+  gameStarted = false;
+  clearInterval(loseLifeTimer);
+  clearInterval(countdownTimer);
+  pauseGameToggleBlur();
+
+  audioHintButton.removeEventListener("click", getAudioHint);
+  pauseButton.removeEventListener("click", pauseGame);
+  quitButton.removeEventListener("click", quitGame);
+
+  pausedLoseLifeValue = timerStartValue;
+  pausedCountdownTimerValue = timerStartValue * 10;
+
+  pauseScreen = document.createElement("div");
+  pauseScreen.classList.add("pause-screen");
+  container.appendChild(pauseScreen);
+
+  pauseMessage = document.createElement("p");
+
+  pauseMessage.innerText = "paused";
+  pauseScreen.appendChild(pauseMessage);
+
+  const resumeButton = document.createElement("button");
+  resumeButton.classList.add("resume-button");
+  resumeButton.innerText = "resume?";
+  pauseScreen.appendChild(resumeButton);
+  resumeButton.addEventListener("click", resumeGame);
+}
+
+function pauseGameToggleBlur() {
+  displayedLives.classList.toggle("blur");
+  displayedCoins.classList.toggle("blur");
+  timerMessage.classList.toggle("blur");
+  displayedGuess.classList.toggle("blur");
+  hint.classList.toggle("blur");
+  audioHintButton.classList.toggle("blur");
+  pauseButton.classList.toggle("blur");
+  quitButton.classList.toggle("blur");
+}
+
+function resumeGame() {
+  gameStarted = true;
+  container.removeChild(pauseScreen);
+  pauseGameToggleBlur();
+
+  audioHintButton.addEventListener("click", getAudioHint);
+  pauseButton.addEventListener("click", pauseGame);
+  quitButton.addEventListener("click", quitGame);
+
+  loseLifeTimer = setInterval(function() {
+    container.innerHTML = "";
+    clearInterval(countdownTimer);
+    timerStartValue = 1000;
+    countdownTimer = setInterval(displayCountdownMessage, 10);
+
+    livesLeft--;
+    makeLivesString();
+    refreshTimers();
+    refreshDisplayValues();
+
+    if (livesLeft === 0 && coins >= 10) {
+      buyBack();
+      clearInterval(countdownTimer);
+      clearInterval(loseLifeTimer);
+    }
+    if (livesLeft === 0 && coins < 10) {
+      loseGame();
+    }
+  }, pausedCountdownTimerValue);
+  timerStartValue = pausedLoseLifeValue;
+  countdownTimer = setInterval(displayCountdownMessage, 10);
+}
+
 function buyBack() {
+  if (modeChosen === "speed") {
+    clearInterval(loseLifeTimer);
+    clearInterval(countdownTimer);
+  }
+
   gameStarted = false;
   container.innerHTML = "";
   const buyBackMessage = document.createElement("p");
@@ -384,17 +527,16 @@ function buyBack() {
   buyBackButton.innerText = "Buy life";
   container.appendChild(buyBackButton);
   container.appendChild(quitButton);
+
   buyBackButton.addEventListener("click", function() {
     container.innerHTML = "";
     coins -= 10;
     livesLeft++;
+
+    newWord();
     if (modeChosen === "speed") {
-      clearInterval(loseLifeTimer);
-      clearInterval(countdownTimer);
-      newWord();
       startTimers();
     }
-    newWord();
   });
 }
 
@@ -447,15 +589,18 @@ function refreshTimers() {
 function winGame() {
   if (modeChosen === "normal") {
     document.removeEventListener("keydown", normalModeEventListener);
-  } else {
+  } else if (modeChosen === "speed") {
     clearInterval(loseLifeTimer);
     clearInterval(countdownTimer);
     document.removeEventListener("keydown", speedModeEventListener);
+  } else {
+    document.removeEventListener("keydown", cheatModeEventListener);
   }
 
   gameStarted = false;
   container.innerHTML = "";
 
+  winAudio.currentTime = 0;
   winAudio.play();
 
   const winMessage = document.createElement("p");
@@ -479,8 +624,13 @@ function winGame() {
 }
 
 function loseGame() {
-  clearInterval(loseLifeTimer);
-  clearInterval(countdownTimer);
+  audio.pause();
+
+  if (modeChosen === "speed") {
+    clearInterval(loseLifeTimer);
+    clearInterval(countdownTimer);
+  }
+
   container.innerHTML = "";
   gameStarted = false;
 
@@ -497,6 +647,9 @@ function loseGame() {
   createRetryButton();
 
   retryButton.addEventListener("click", function() {
+    document.removeEventListener("keydown", normalModeEventListener);
+    document.removeEventListener("keydown", speedModeEventListener);
+    document.removeEventListener("keydown", cheatModeEventListener);
     loseAudio.pause();
     loseAudio.currentTime = 0;
   });
@@ -514,6 +667,8 @@ function quitGame() {
 
   document.removeEventListener("keydown", normalModeEventListener);
   document.removeEventListener("keydown", speedModeEventListener);
+  document.removeEventListener("keydown", cheatModeEventListener);
+
   secretWord = "";
   gameStarted = false;
   modeChosen = "";
@@ -550,6 +705,7 @@ function displayAlreadyGuessedMessage() {
       }
       container.appendChild(displayedGuess);
       container.appendChild(hint);
+      container.appendChild(displayWronglyGuessedLetters);
       if (audioHintButton.style.opacity === "1") {
         container.appendChild(audioHintButton);
       }
@@ -566,20 +722,26 @@ function correctGuess() {
   correctGuesses++;
   coins += 5;
 
+  wronglyGuessedLetters = [];
+
   if (displayedLives.parentNode === container) {
     container.removeChild(displayedLives);
     container.removeChild(displayedCoins);
     container.removeChild(displayedGuess);
     container.removeChild(hint);
+    container.removeChild(displayWronglyGuessedLetters);
     if (quitButton.parentNode === container) {
       container.removeChild(quitButton);
     }
 
     if (modeChosen === "speed") {
       container.removeChild(timerMessage);
+      if (pauseButton.parentNode === container) {
+        container.removeChild(pauseButton);
+      }
     }
 
-    displayYeah();
+    displayCorrectGuess();
   }
 
   if (audioHintButton.parentNode === container) {
@@ -603,27 +765,6 @@ function displayWrongGuessMessage() {
   container.appendChild(wrongGuessMessage);
 
   // to prevent errors where parent el doesn't exist yet
-  if (displayedLives.parentNode === container) {
-    container.removeChild(displayedLives);
-    container.removeChild(displayedCoins);
-    container.removeChild(displayedGuess);
-    container.removeChild(hint);
-
-    if (modeChosen === "speed") {
-      container.removeChild(timerMessage);
-    }
-
-    if (
-      audioHintButton.style.opacity === "1" ||
-      audioHintButton.style.opacity === "0"
-    ) {
-      if (audioHintButton.parentNode === container) {
-        container.removeChild(audioHintButton);
-      }
-    }
-
-    container.removeChild(quitButton);
-  }
 
   setTimeout(function() {
     if (wrongGuessMessage.parentNode === container) {
@@ -637,19 +778,34 @@ function displayWrongGuessMessage() {
       container.removeChild(wrongGuessMessage);
       container.appendChild(displayedGuess);
       container.appendChild(hint);
+      container.appendChild(displayWronglyGuessedLetters);
+
       if (audioHintButton.style.opacity === "1") {
         container.appendChild(audioHintButton);
       }
+
+      if (modeChosen === "speed") {
+        container.appendChild(pauseButton);
+      }
       container.appendChild(quitButton);
     }
-  }, 500);
+  }, 300);
 }
 
 function normalModeEventListener(e) {
   // had to create event listeners to remove them, faced a problem where both event listeners were running at the same time
+  let enteredKey;
   if (gameStarted) {
-    // prevent "wrong" guesses by converting entered key to lowercase
-    let enteredKey = e.key.toLowerCase();
+    if (
+      (e.keyCode >= 48 && e.keyCode <= 57) ||
+      (e.keyCode >= 65 && e.keyCode <= 90) ||
+      e.keyCode === 190 ||
+      e.keyCode === 32
+    ) {
+      enteredKey = e.key.toLowerCase();
+    } else {
+      return;
+    }
     if (livesLeft > 0) {
       gameStarted = true;
       if (secretWord.includes(enteredKey)) {
@@ -671,6 +827,12 @@ function normalModeEventListener(e) {
           }
         }
       } else {
+        if (!wronglyGuessedLetters.includes(enteredKey)) {
+          wronglyGuessedLetters.push(enteredKey);
+          displayWronglyGuessedLetters.innerText = `Wrongly guessed letters:  ${wronglyGuessedLetters.join(
+            ","
+          )}`;
+        }
         livesLeft--;
         wrongAudio.play();
         displayWrongGuessMessage();
@@ -689,8 +851,18 @@ function normalModeEventListener(e) {
 }
 
 function speedModeEventListener(e) {
+  let enteredKey;
   if (gameStarted) {
-    let enteredKey = e.key.toLowerCase();
+    if (
+      (e.keyCode >= 48 && e.keyCode <= 57) ||
+      (e.keyCode >= 65 && e.keyCode <= 90) ||
+      e.keyCode === 190 ||
+      e.keyCode === 32
+    ) {
+      enteredKey = e.key.toLowerCase();
+    } else {
+      return;
+    }
     if (livesLeft > 0) {
       if (secretWord.includes(enteredKey)) {
         for (let i = 0; i < secretWord.length; i++) {
@@ -711,6 +883,12 @@ function speedModeEventListener(e) {
           }
         }
       } else {
+        if (!wronglyGuessedLetters.includes(enteredKey)) {
+          wronglyGuessedLetters.push(enteredKey);
+          displayWronglyGuessedLetters.innerText = `Wrongly guessed letters:  ${wronglyGuessedLetters.join(
+            ","
+          )}`;
+        }
         container.innerHTML = "";
         livesLeft--;
         wrongAudio.play();
@@ -727,6 +905,21 @@ function speedModeEventListener(e) {
   }
 
   if (rappers.length === 0) {
+    winGame();
+  }
+}
+
+function cheatModeEventListener() {
+  if (guess.join("") !== secretWord) {
+    guess[cheatCounter] = secretWord[cheatCounter];
+    cheatCounter++;
+    displayedGuess.innerText = guess.join("");
+  } else {
+    cheatCounter = 0;
+    correctGuess();
+  }
+  if (rappers.length === 0) {
+    cheatCounter = 0;
     winGame();
   }
 }

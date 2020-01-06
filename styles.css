@@ -26,8 +26,8 @@ a {
 }
 
 a:hover {
-  transition: 2s;
-  color: red;
+  transition: 0.5s;
+  color: #bb0000;
   font-size: 1.2rem;
 }
 
@@ -44,7 +44,7 @@ a:hover {
   font-size: 10rem;
 }
 
-.author-message {
+.creator-message {
   font-size: 1rem;
   margin-top: 50px;
 }
@@ -55,6 +55,25 @@ a:hover {
 
 .instructions-para {
   font-size: 2rem;
+  position: absolute;
+}
+
+.hint {
+  font-size: 3rem;
+}
+
+.display-wrongly-guessed-letters {
+  font-size: 2rem;
+  color: #bb0000;
+}
+
+.pause-screen {
+  position: absolute;
+}
+
+.blur {
+  transition: 0.5s;
+  filter: blur(25px);
 }
 
 .audio-hint-button {
@@ -68,7 +87,7 @@ a:hover {
 
 .win-gif {
   border-radius: 50%;
-  width: 50%;
+  width: 25%;
   margin: 0 0 10px;
 }
 
@@ -85,7 +104,9 @@ a:hover {
   font-size: 10rem;
 }
 
-.displayed-lives, .displayed-coins, .timer-message {
+.displayed-lives,
+.displayed-coins,
+.timer-message {
   margin-right: auto;
   font-size: 1.5rem;
 }
@@ -103,6 +124,8 @@ a:hover {
 .buy-back-button,
 .retry-button,
 .audio-hint-button,
+.pause-button,
+.resume-button,
 .quit-button {
   margin: 5px;
   color: black;
@@ -117,6 +140,8 @@ a:hover {
 .buy-back-button:hover,
 .retry-button:hover,
 .audio-hint-button:hover,
+.pause-button:hover,
+.resume-button:hover,
 .quit-button:hover {
   background-color: #282828;
   color: white;
@@ -127,7 +152,9 @@ h1,
 .normal-mode-button,
 .speed-mode-button,
 .instructions-button,
-.author-message,
+.instructions-para,
+.back-button,
+.creator-message,
 .only-for-desktop-message,
 .win-message,
 .win-gif,
