@@ -65,7 +65,7 @@ function populateRappersArray() {
     { rapper: "kanye", hint: `<u>YE</u>EZUS` },
     {
       rapper: "chamillionaire",
-      hint: "only really famous for that one song"
+      hint: "only really famous for that one song, has millionare in name"
     },
     {
       rapper: "bow wow",
@@ -186,7 +186,7 @@ function startScreen() {
 
   creatorMessage = document.createElement("p");
   creatorMessage.classList.add("creator-message");
-  creatorMessage.innerHTML = `Made with <span class="heart">❤</span> by <a href="https://github.com/benjacoblee/">Ben Jacob Lee</a>`;
+  creatorMessage.innerHTML = `Made with <p class="heart">❤</p> by <a href="https://github.com/benjacoblee/hiphop-hangman">Ben Jacob Lee</a>`;
   container.appendChild(creatorMessage);
 
   onlyForDesktopMessage = document.createElement("p");
@@ -208,6 +208,7 @@ function startScreen() {
   });
 
   const heart = document.querySelector(".heart");
+  heart.classList.add("heart");
   heart.addEventListener("click", function() {
     modeChosen = "cheat";
     startGame();

@@ -76,13 +76,22 @@ a:hover {
   filter: blur(25px);
 }
 
+.displayed-guess {
+  font-size: 7rem;
+}
+
 .audio-hint-button {
   color: black;
   border-radius: 5px;
 }
 
-.displayed-guess {
-  font-size: 7rem;
+.heart {
+  display: inline;
+  font-size: 1rem;
+}
+
+.heart:hover {
+  cursor: pointer;
 }
 
 .win-gif {
