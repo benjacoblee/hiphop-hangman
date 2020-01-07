@@ -13,11 +13,21 @@ If the user guesses correctly, the user earns 5 coins. Else if the user guesses 
 
 Now comes with *timer*! If there was no guess, user loses a life.
 
+### Installation Instructions
+None
+
 ### Technologies Used
 HTML, CSS and Javascript.
 
-### Methodology
-I started by implementing the most basic version of the game - matching the user-entered string with a pre-existing string. Once this worked, I slowly introduced other elements: audio placeholders, CSS styling, buttons, display refreshes, etc.
+### Approach Taken
+I started by implementing the most basic version of the game - matching the user-entered string with a pre-existing string.
+Once this worked, I slowly introduced other elements: audio, CSS styling, buttons, display refreshes, etc. 
+
+Subsequently, I added a timer. Once the timer was working, I split the game's existing functionality into two different modes: normal and speed.
+
+Finally, I added a pause function.
+
+The rest of the time was spent trying to induce errors and fix bugs.
 
 ### Motivations
 Did not start clearly-defined motivations. However, motivation was quick to arise - as fixing the problem at hand almost always led to another problem. If I had to say, here are some things I've learned:
@@ -27,6 +37,13 @@ Did not start clearly-defined motivations. However, motivation was quick to aris
 - some CSS animation
 - DOM manipulation methods
 - slight approximation of the order in which code is run
+- use the debugger and step through
 - some use cases for setInterval and setTimeout
+- introduce new elements ONE AT A TIME
 
-And most importantly: to focus on small problems, rather than attempting to tackle the whole. 
+And most importantly: to focus on small problems, rather than attempting to tackle the whole (related to point above). 
+
+### Unsolved Problems
+- unsure why new word sometimes refreshes with a letter from the previous word (still detecting keydown? unlikely)
+- after pausing game, can resume at captured value. Unsure why it reverts to original timer value (not a bug though)
+- uncaught promise: play request interrupted by by call to pause (seems to be a Chrome-specific error)
