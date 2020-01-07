@@ -415,9 +415,8 @@ function refreshDisplayValues() {
     container.appendChild(displayedGuess);
     if (modeChosen !== "cheat") {
       container.appendChild(hint);
+      container.appendChild(displayWronglyGuessedLetters);
     }
-
-    container.appendChild(displayWronglyGuessedLetters);
 
     if (audioHintButton.style.opacity === "1" && modeChosen !== "cheat") {
       // means that audio hint button hasn't been clicked yet
