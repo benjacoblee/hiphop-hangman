@@ -73,7 +73,7 @@ function populateRappersArray() {
     },
     {
       rapper: "j. cole",
-      hint: "bet jay-z regrets rejecting him"
+      hint: "bet jay-z regrets rejecting him. Jermaine Lamarr Cole"
     },
     {
       rapper: "eazy e",
@@ -106,11 +106,23 @@ function populateRappersArray() {
     },
     { rapper: "cardi b", hint: "sounds like bacardi, cardio" },
     { rapper: "nicki minaj", hint: "female, wears colorful wigs" },
-    { rapper: "chance", hint: "the probabilty of something happening" },
+    {
+      rapper: "chance",
+      hint: `the probabilty of something happening. "leave it up to ___"`
+    },
     {
       rapper: "dj khaled",
       hint: `"you smart. you loyal. i appreciate that." doesn't actually rap much. memelord of hip-hop`
-    }
+    },
+    { rapper: "the weeknd", hint: "something working people look forward to" },
+    { rapper: "khalid", hint: `debuted with "location"` },
+    { rapper: "bruno mars", hint: "a planet, half-filipino" },
+    {
+      rapper: "daniel caesar",
+      hint: "shares same last name as a famous roman dictator"
+    },
+    { rapper: "usher", hint: "someone who escorts people to their seats" },
+    { rapper: "t pain", hint: "the opposite of pleasure" }
   ];
 }
 
@@ -118,7 +130,7 @@ let ranNum;
 let secretWord;
 let audio;
 let hint;
-let rappers = [];
+let rappers = []; // starts off as an empty array, splices rappers from array to prevent duplicates
 let guess = [];
 let wronglyGuessedLetters = [];
 let coins = 10; // 10 coins to buy back 1 life
@@ -131,6 +143,7 @@ let livesString;
 // startscreen and display stuff
 let container;
 let gameTitle;
+let subTitle;
 let normalModeButton;
 let speedModeButton;
 let modeChosen;
@@ -169,6 +182,11 @@ function startScreen() {
   gameTitle.innerText = `Hip-Hop Hangman`;
   container.appendChild(gameTitle);
 
+  subTitle = document.createElement("p");
+  subTitle.classList.add("subtitle");
+  subTitle.innerText = "(and r&b)";
+  container.appendChild(subTitle);
+
   normalModeButton = document.createElement("button");
   normalModeButton.classList.add("normal-mode-button");
   normalModeButton.innerText = "Normal Mode";
@@ -196,7 +214,7 @@ function startScreen() {
 
   normalModeButton.addEventListener("click", function() {
     modeChosen = "normal"; // set mode chosen in order to append the proper elements; speed mode will not have timer message
-    startGame(); // also to add the correct event listeners
+    startGame(); // also to add the correct event listener
   });
   speedModeButton.addEventListener("click", function() {
     modeChosen = "speed";
@@ -229,6 +247,7 @@ function cancelScreen() {
 function startGame() {
   correctGuesses = 0;
   container.removeChild(gameTitle);
+  container.removeChild(subTitle);
   container.removeChild(normalModeButton);
   container.removeChild(speedModeButton);
   container.removeChild(instructionsButton);
@@ -285,6 +304,7 @@ function displayInstructions() {
 
 function instructionsToggleBlur() {
   gameTitle.classList.toggle("blur");
+  subTitle.classList.toggle("blur");
   normalModeButton.classList.toggle("blur");
   speedModeButton.classList.toggle("blur");
   instructionsButton.classList.toggle("blur");
@@ -401,18 +421,6 @@ function refreshDisplayValues() {
   }
 }
 
-function displayCorrectGuess() {
-  const correctGuessMessage = document.createElement("p");
-  correctGuessMessage.classList.add("correct-guess-message");
-  correctGuessMessage.innerText = secretWord;
-  container.appendChild(correctGuessMessage);
-  setTimeout(function() {
-    if (correctGuessMessage.parentNode === container) {
-      container.removeChild(correctGuessMessage);
-    }
-  }, 300);
-}
-
 function makeLivesString() {
   livesString = "Lives left: ";
   // loops over livesLeft and concatenates heart string for every life left
@@ -449,15 +457,14 @@ function pauseGame() {
   pauseButton.removeEventListener("click", pauseGame);
   quitButton.removeEventListener("click", quitGame);
 
-  pausedLoseLifeValue = timerStartValue;
-  pausedCountdownTimerValue = timerStartValue * 10;
+  pausedLoseLifeValue = timerStartValue; // captures timer value at the moment of clearing interval
+  pausedCountdownTimerValue = timerStartValue * 10; // to ensure timing is the same
 
   pauseScreen = document.createElement("div");
   pauseScreen.classList.add("pause-screen");
   container.appendChild(pauseScreen);
 
   pauseMessage = document.createElement("p");
-
   pauseMessage.innerText = "paused";
   pauseScreen.appendChild(pauseMessage);
 
@@ -588,20 +595,14 @@ function refreshTimers() {
 }
 
 function winGame() {
-  if (modeChosen === "normal") {
-    document.removeEventListener("keydown", normalModeEventListener);
-  } else if (modeChosen === "speed") {
+  if (modeChosen === "speed") {
     clearInterval(loseLifeTimer);
     clearInterval(countdownTimer);
-    document.removeEventListener("keydown", speedModeEventListener);
-  } else {
-    document.removeEventListener("keydown", cheatModeEventListener);
   }
 
   gameStarted = false;
   container.innerHTML = "";
 
-  winAudio.currentTime = 0;
   winAudio.play();
 
   const winMessage = document.createElement("p");
@@ -610,7 +611,7 @@ function winGame() {
   container.appendChild(winMessage);
 
   const winGif = document.createElement("img");
-  winGif.classList.add("win-gif");
+  winGif.classList.add("gif");
   winGif.setAttribute(
     "src",
     "https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif"
@@ -620,7 +621,11 @@ function winGame() {
   populateRappersArray();
   createRetryButton();
   retryButton.addEventListener("click", function() {
+    document.removeEventListener("keydown", normalModeEventListener);
+    document.removeEventListener("keydown", speedModeEventListener);
+    document.removeEventListener("keydown", cheatModeEventListener);
     winAudio.pause();
+    winAudio.currentTime = 0; // needed in case user wins multiple times, win audio will play from the time it stopped
   });
 }
 
@@ -642,6 +647,14 @@ function loseGame() {
   loseMessage.innerText = `You lose!
       Correct guesses: ${correctGuesses}`;
   container.appendChild(loseMessage);
+
+  const loseGif = document.createElement("img");
+  loseGif.classList.add("gif");
+  loseGif.setAttribute(
+    "src",
+    "https://media.giphy.com/media/v9G3NGByE9x16/giphy.gif"
+  );
+  container.appendChild(loseGif);
 
   populateRappersArray();
 
@@ -689,6 +702,18 @@ function displayCountdownMessage() {
   timerMessage.innerText = `Time left: ${timerStartValue--}`;
 }
 
+function displayCorrectGuess() {
+  const correctGuessMessage = document.createElement("p");
+  correctGuessMessage.classList.add("correct-guess-message");
+  correctGuessMessage.innerText = secretWord;
+  container.appendChild(correctGuessMessage);
+  setTimeout(function() {
+    if (correctGuessMessage.parentNode === container) {
+      container.removeChild(correctGuessMessage);
+    }
+  }, 300);
+}
+
 function displayAlreadyGuessedMessage() {
   container.innerHTML = "";
 
@@ -709,6 +734,45 @@ function displayAlreadyGuessedMessage() {
       container.appendChild(displayWronglyGuessedLetters);
       if (audioHintButton.style.opacity === "1") {
         container.appendChild(audioHintButton);
+      }
+      container.appendChild(quitButton);
+    }
+  }, 300);
+}
+
+function displayWrongGuessMessage() {
+  container.innerHTML = "";
+
+  wrongGuessMessage = document.createElement("p");
+  wrongGuessMessage.classList.add("wrong-guess-message");
+  wrongGuessMessage.innerText = `WRONG
+                                Lives left: ${livesLeft}
+                                `;
+
+  container.appendChild(wrongGuessMessage);
+
+  // to prevent errors where parent el doesn't exist yet
+
+  setTimeout(function() {
+    if (wrongGuessMessage.parentNode === container) {
+      container.appendChild(displayedLives);
+      container.appendChild(displayedCoins);
+
+      if (modeChosen === "speed") {
+        container.appendChild(timerMessage);
+      }
+
+      container.removeChild(wrongGuessMessage);
+      container.appendChild(displayedGuess);
+      container.appendChild(hint);
+      container.appendChild(displayWronglyGuessedLetters);
+
+      if (audioHintButton.style.opacity === "1") {
+        container.appendChild(audioHintButton);
+      }
+
+      if (modeChosen === "speed") {
+        container.appendChild(pauseButton);
       }
       container.appendChild(quitButton);
     }
@@ -754,58 +818,19 @@ function correctGuess() {
   }
 }
 
-function displayWrongGuessMessage() {
-  container.innerHTML = "";
-
-  wrongGuessMessage = document.createElement("p");
-  wrongGuessMessage.classList.add("wrong-guess-message");
-  wrongGuessMessage.innerText = `WRONG
-                                Lives left: ${livesLeft}
-                                `;
-
-  container.appendChild(wrongGuessMessage);
-
-  // to prevent errors where parent el doesn't exist yet
-
-  setTimeout(function() {
-    if (wrongGuessMessage.parentNode === container) {
-      container.appendChild(displayedLives);
-      container.appendChild(displayedCoins);
-
-      if (modeChosen === "speed") {
-        container.appendChild(timerMessage);
-      }
-
-      container.removeChild(wrongGuessMessage);
-      container.appendChild(displayedGuess);
-      container.appendChild(hint);
-      container.appendChild(displayWronglyGuessedLetters);
-
-      if (audioHintButton.style.opacity === "1") {
-        container.appendChild(audioHintButton);
-      }
-
-      if (modeChosen === "speed") {
-        container.appendChild(pauseButton);
-      }
-      container.appendChild(quitButton);
-    }
-  }, 300);
-}
-
 function normalModeEventListener(e) {
   // had to create event listeners to remove them, faced a problem where both event listeners were running at the same time
   let enteredKey;
   if (gameStarted) {
     if (
-      (e.keyCode >= 48 && e.keyCode <= 57) ||
+      (e.keyCode >= 48 && e.keyCode <= 57) || // only allows keys that are used to be registered as guesses i.e a-z, numbers, spacebar and period
       (e.keyCode >= 65 && e.keyCode <= 90) ||
       e.keyCode === 190 ||
       e.keyCode === 32
     ) {
-      enteredKey = e.key.toLowerCase();
+      enteredKey = e.key.toLowerCase(); // in case caps is on
     } else {
-      return;
+      return; // return is needed to prevent entered key as being registered as guesses
     }
     if (livesLeft > 0) {
       gameStarted = true;
@@ -815,7 +840,6 @@ function normalModeEventListener(e) {
             // loops over secretWord, if value at indexes match then change underscore to corresponding letter
             guess[i] = secretWord[i];
             let word = guess.join("");
-
             displayedGuess.innerText = word;
           } else if (
             secretWord[i] === enteredKey &&
@@ -829,6 +853,7 @@ function normalModeEventListener(e) {
         }
       } else {
         if (!wronglyGuessedLetters.includes(enteredKey)) {
+          // then don't let it be pushed into the array
           wronglyGuessedLetters.push(enteredKey);
           displayWronglyGuessedLetters.innerText = `Wrongly guessed letters:  ${wronglyGuessedLetters.join(
             ","
@@ -870,7 +895,6 @@ function speedModeEventListener(e) {
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
             guess[i] = secretWord[i];
             let word = guess.join("");
-
             displayedGuess.innerText = word;
           } else if (
             secretWord[i] === enteredKey &&
@@ -904,7 +928,6 @@ function speedModeEventListener(e) {
       loseGame();
     }
   }
-
   if (rappers.length === 0) {
     winGame();
   }

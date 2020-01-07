@@ -94,7 +94,7 @@ a:hover {
   cursor: pointer;
 }
 
-.win-gif {
+.gif {
   border-radius: 50%;
   width: 25%;
   margin: 0 0 10px;
@@ -158,6 +158,7 @@ a:hover {
 }
 
 h1,
+.subtitle,
 .normal-mode-button,
 .speed-mode-button,
 .instructions-button,
