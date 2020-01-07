@@ -65,7 +65,7 @@ function populateRappersArray() {
     { rapper: "kanye", hint: `<u>YE</u>EZUS` },
     {
       rapper: "chamillionaire",
-      hint: "only really famous for that one song, has millionare in name"
+      hint: "only really famous for that one song, has millionaire in name"
     },
     {
       rapper: "bow wow",
