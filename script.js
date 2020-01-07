@@ -398,9 +398,11 @@ function refreshDisplayValues() {
         container.removeChild(timerMessage); // this element won't exist if mode chosen was normal
       }
       container.removeChild(displayedGuess);
-      container.removeChild(hint);
-      container.removeChild(displayWronglyGuessedLetters);
-      container.removeChild(audioHintButton);
+      if (modeChosen !== "cheat") {
+        container.removeChild(hint);
+        container.removeChild(displayWronglyGuessedLetters);
+        container.removeChild(audioHintButton);
+      }
     }
 
     container.appendChild(displayedLives);
@@ -604,6 +606,10 @@ function refreshTimers() {
 }
 
 function winGame() {
+  document.removeEventListener("keydown", normalModeEventListener);
+  document.removeEventListener("keydown", speedModeEventListener);
+  document.removeEventListener("keydown", cheatModeEventListener);
+
   if (modeChosen === "speed") {
     clearInterval(loseLifeTimer);
     clearInterval(countdownTimer);
@@ -630,15 +636,16 @@ function winGame() {
   populateRappersArray();
   createRetryButton();
   retryButton.addEventListener("click", function() {
-    document.removeEventListener("keydown", normalModeEventListener);
-    document.removeEventListener("keydown", speedModeEventListener);
-    document.removeEventListener("keydown", cheatModeEventListener);
     winAudio.pause();
     winAudio.currentTime = 0; // needed in case user wins multiple times, win audio will play from the time it stopped
   });
 }
 
 function loseGame() {
+  document.removeEventListener("keydown", normalModeEventListener);
+  document.removeEventListener("keydown", speedModeEventListener);
+  document.removeEventListener("keydown", cheatModeEventListener);
+
   audio.pause();
 
   if (modeChosen === "speed") {
@@ -670,9 +677,6 @@ function loseGame() {
   createRetryButton();
 
   retryButton.addEventListener("click", function() {
-    document.removeEventListener("keydown", normalModeEventListener);
-    document.removeEventListener("keydown", speedModeEventListener);
-    document.removeEventListener("keydown", cheatModeEventListener);
     loseAudio.pause();
     loseAudio.currentTime = 0;
   });
