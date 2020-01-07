@@ -314,13 +314,19 @@ function instructionsToggleBlur() {
 
 function newWord() {
   gameStarted = true;
-  correctAudio.play();
+  if (modeChosen !== "cheat") {
+    correctAudio.play();
+  }
 
   ranNum = Math.floor(Math.random() * rappers.length);
 
   // use string interpolation to choose rapper from array and play corresponding audio
   audio = new Audio(`./audio/${rappers[ranNum].rapper}.mp3`);
   audio.currentTime = 0;
+
+  if (modeChosen === "cheat") {
+    audio.play();
+  }
 
   hint = document.createElement("p");
   hint.classList.add("hint");
@@ -405,10 +411,13 @@ function refreshDisplayValues() {
     }
 
     container.appendChild(displayedGuess);
-    container.appendChild(hint);
+    if (modeChosen !== "cheat") {
+      container.appendChild(hint);
+    }
+
     container.appendChild(displayWronglyGuessedLetters);
 
-    if (audioHintButton.style.opacity === "1") {
+    if (audioHintButton.style.opacity === "1" && modeChosen !== "cheat") {
       // means that audio hint button hasn't been clicked yet
       container.appendChild(audioHintButton);
     }
@@ -793,8 +802,11 @@ function correctGuess() {
     container.removeChild(displayedLives);
     container.removeChild(displayedCoins);
     container.removeChild(displayedGuess);
-    container.removeChild(hint);
-    container.removeChild(displayWronglyGuessedLetters);
+    if (modeChosen !== "cheat") {
+      container.removeChild(hint);
+      container.removeChild(displayWronglyGuessedLetters);
+    }
+
     if (quitButton.parentNode === container) {
       container.removeChild(quitButton);
     }
