@@ -44,6 +44,6 @@ Did not start clearly-defined motivations. However, motivation was quick to aris
 And most importantly: to focus on small problems, rather than attempting to tackle the whole (related to point above). 
 
 ## Unsolved Problems
-- Unsure why new word sometimes refreshes with a letter from the previous word (still detecting keydown? unlikely)
+- Unsure why new word sometimes refreshes with a letter from the previous word (fixed: needed Boolean to detect if input happened, THEN change guess[i])
 - After pausing game, can resume at captured value. Unsure why it reverts to original timer value (not a bug though)
 - Uncaught promise: play request interrupted by by call to pause (seems to be a Chrome-specific error)
