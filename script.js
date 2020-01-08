@@ -848,7 +848,6 @@ function normalModeEventListener(e) {
       return; // return is needed to prevent entered key as being registered as guesses
     }
     if (livesLeft > 0) {
-      gameStarted = true;
       if (secretWord.includes(enteredKey)) {
         for (let i = 0; i < secretWord.length; i++) {
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
