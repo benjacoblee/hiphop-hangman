@@ -139,6 +139,7 @@ let correctGuesses = 0;
 let cheatCounter = 0;
 let gameStarted = false; // I THINK this was to prevent errors where game hadn't started and event listener was firing
 let livesString;
+let inputHappened;
 
 // startscreen and display stuff
 let container;
@@ -314,6 +315,7 @@ function instructionsToggleBlur() {
 
 function newWord() {
   gameStarted = true;
+  inputHappened = false;
   if (modeChosen !== "cheat") {
     correctAudio.play();
   }
@@ -836,6 +838,9 @@ function correctGuess() {
 function normalModeEventListener(e) {
   // had to create event listeners to remove them, faced a problem where both event listeners were running at the same time
   let enteredKey;
+  if (e) {
+    inputHappened = true;
+  }
   if (gameStarted) {
     if (
       (e.keyCode >= 48 && e.keyCode <= 57) || // only allows keys that are used to be registered as guesses i.e a-z, numbers, spacebar and period
@@ -852,7 +857,9 @@ function normalModeEventListener(e) {
         for (let i = 0; i < secretWord.length; i++) {
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
             // loops over secretWord, if value at indexes match then change underscore to corresponding letter
-            guess[i] = secretWord[i];
+            if (inputHappened) {
+              guess[i] = secretWord[i];
+            }
             let word = guess.join("");
             displayedGuess.innerText = word;
           } else if (
@@ -891,6 +898,9 @@ function normalModeEventListener(e) {
 }
 
 function speedModeEventListener(e) {
+  if (e) {
+    inputHappened = true;
+  }
   let enteredKey;
   if (gameStarted) {
     if (
@@ -907,7 +917,9 @@ function speedModeEventListener(e) {
       if (secretWord.includes(enteredKey)) {
         for (let i = 0; i < secretWord.length; i++) {
           if (secretWord[i] === enteredKey && !guess[i].includes(enteredKey)) {
-            guess[i] = secretWord[i];
+            if (inputHappened) {
+              guess[i] = secretWord[i];
+            }
             let word = guess.join("");
             displayedGuess.innerText = word;
           } else if (
