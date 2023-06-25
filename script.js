@@ -9,13 +9,13 @@ function askIfReal() {
     showCancelButton: true,
     cancelButtonText: "nah",
     cancelButtonColor: "#f2201d"
-  }).then(function(result) {
+  }).then(function (result) {
     if (result.value) {
       correctAudio.play();
       setTimeout(startScreen, 200); // create start screen
     } else if (result.dismiss) {
       setTimeout(cancelScreen, 200);
-      setTimeout(function() {
+      setTimeout(function () {
         document.body.innerHTML = "";
       }, 1000);
       setTimeout(askIfReal, 1500);
@@ -92,8 +92,7 @@ function populateRappersArray() {
     { rapper: "nelly", hint: "Cor<u>nell</u> Haynes. rhymes with kelly" },
     {
       rapper: "xzibit",
-      hint:
-        "an organised presentation and display of a selection of items. an art ___ (not gallery)"
+      hint: "an organised presentation and display of a selection of items. an art ___ (not gallery)"
     },
     {
       rapper: "will smith",
@@ -213,22 +212,22 @@ function startScreen() {
   onlyForDesktopMessage.innerText = "Desktop only";
   container.append(onlyForDesktopMessage);
 
-  normalModeButton.addEventListener("click", function() {
+  normalModeButton.addEventListener("click", function () {
     modeChosen = "normal"; // set mode chosen in order to append the proper elements; speed mode will not have timer message
     startGame(); // also to add the correct event listener
   });
-  speedModeButton.addEventListener("click", function() {
+  speedModeButton.addEventListener("click", function () {
     modeChosen = "speed";
     startGame();
   });
-  instructionsButton.addEventListener("click", function() {
+  instructionsButton.addEventListener("click", function () {
     displayInstructions();
     instructionsToggleBlur();
   });
 
   const heart = document.querySelector(".heart");
   heart.classList.add("heart");
-  heart.addEventListener("click", function() {
+  heart.addEventListener("click", function () {
     modeChosen = "cheat";
     startGame();
   });
@@ -260,7 +259,7 @@ function startGame() {
   yeahMessage.classList.add("correct-guess-message");
   yeahMessage.innerText = "yeah";
   container.appendChild(yeahMessage);
-  setTimeout(function() {
+  setTimeout(function () {
     container.removeChild(yeahMessage);
   }, 200);
 
@@ -280,7 +279,7 @@ function startGame() {
 }
 
 function displayInstructions() {
-  const instructionsPara = document.createElement("p");
+  const instructionsPara = document.createElement("div");
   instructionsPara.classList.add("instructions-para");
   instructionsPara.innerText = `Welcome to Hip-Hop Hangman!
     Listen to the sound clues provided and guess the rapper!
@@ -294,9 +293,9 @@ function displayInstructions() {
   const backButton = document.createElement("button");
   backButton.classList.add("back-button");
   backButton.innerText = "Go Back";
-  container.appendChild(backButton);
+  instructionsPara.appendChild(backButton);
 
-  backButton.addEventListener("click", function() {
+  backButton.addEventListener("click", function () {
     document.body.innerHTML = "";
     instructionsToggleBlur();
     startScreen();
@@ -507,7 +506,7 @@ function resumeGame() {
   pauseButton.addEventListener("click", pauseGame);
   quitButton.addEventListener("click", quitGame);
 
-  loseLifeTimer = setInterval(function() {
+  loseLifeTimer = setInterval(function () {
     container.innerHTML = "";
     clearInterval(countdownTimer);
     timerStartValue = 1000;
@@ -548,7 +547,7 @@ function buyBack() {
   container.appendChild(buyBackButton);
   container.appendChild(quitButton);
 
-  buyBackButton.addEventListener("click", function() {
+  buyBackButton.addEventListener("click", function () {
     container.innerHTML = "";
     coins -= 10;
     livesLeft++;
@@ -565,7 +564,7 @@ function createRetryButton() {
   retryButton.classList.add("retry-button");
   retryButton.innerText = "Retry?";
   container.appendChild(retryButton);
-  retryButton.addEventListener("click", function() {
+  retryButton.addEventListener("click", function () {
     document.body.innerHTML = "";
     livesLeft = 10;
     coins = 10;
@@ -576,7 +575,7 @@ function createRetryButton() {
 }
 
 function startTimers() {
-  loseLifeTimer = setInterval(function() {
+  loseLifeTimer = setInterval(function () {
     container.innerHTML = "";
     clearInterval(countdownTimer);
     timerStartValue = 1000;
@@ -636,7 +635,7 @@ function winGame() {
 
   populateRappersArray();
   createRetryButton();
-  retryButton.addEventListener("click", function() {
+  retryButton.addEventListener("click", function () {
     winAudio.pause();
     winAudio.currentTime = 0; // needed in case user wins multiple times, win audio will play from the time it stopped
   });
@@ -677,14 +676,14 @@ function loseGame() {
 
   createRetryButton();
 
-  retryButton.addEventListener("click", function() {
+  retryButton.addEventListener("click", function () {
     loseAudio.pause();
     loseAudio.currentTime = 0;
   });
 
   container.appendChild(quitButton);
   quitButton.classList.add("quit-button-fade-in");
-  quitButton.addEventListener("click", function() {
+  quitButton.addEventListener("click", function () {
     loseAudio.pause();
     loseAudio.currentTime = 0;
   });
@@ -721,7 +720,7 @@ function displayCorrectGuess() {
   correctGuessMessage.classList.add("correct-guess-message");
   correctGuessMessage.innerText = secretWord;
   container.appendChild(correctGuessMessage);
-  setTimeout(function() {
+  setTimeout(function () {
     if (correctGuessMessage.parentNode === container) {
       container.removeChild(correctGuessMessage);
     }
@@ -735,7 +734,7 @@ function displayAlreadyGuessedMessage() {
   alreadyGuessedMessage.innerText = "You already guessed that!";
   container.appendChild(alreadyGuessedMessage);
 
-  setTimeout(function() {
+  setTimeout(function () {
     if (alreadyGuessedMessage.parentNode === container) {
       container.removeChild(alreadyGuessedMessage);
       container.appendChild(displayedLives);
@@ -767,7 +766,7 @@ function displayWrongGuessMessage() {
 
   // to prevent errors where parent el doesn't exist yet
 
-  setTimeout(function() {
+  setTimeout(function () {
     if (wrongGuessMessage.parentNode === container) {
       container.appendChild(displayedLives);
       container.appendChild(displayedCoins);
